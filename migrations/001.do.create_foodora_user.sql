@@ -5,8 +5,8 @@ CREATE TABLE foodora_user (
     last_name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     user_address TEXT,
-    zip INTEGER,
+    zip TEXT,
     city TEXT,
-    phone INTEGER,
+    phone TEXT,
     state TEXT
 );

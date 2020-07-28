@@ -5,16 +5,10 @@ CREATE TABLE foodora_restaurant (
     restaurant_name TEXT NOT NULL,
     restaurant_address TEXT NOT NULL,
     city TEXT NOT NULL,
-    zip INTEGER NOT NULL,
+    zip TEXT NOT NULL,
     state TEXT,
-    phone INTEGER,
+    phone TEXT,
     url TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE
 );
 
-
-ALTER TABLE dish
-  ADD COLUMN
-    restaurant_id INTEGER REFERENCES foodora_restaurant(id),
-    name TEXT REFERENCES foodora_restaurant(restaurant_name),
-    ON DELETE SET NULL;

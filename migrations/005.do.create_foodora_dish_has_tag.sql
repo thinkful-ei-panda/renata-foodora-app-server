@@ -5,3 +5,5 @@ CREATE TABLE foodora_dish_has_tag (
     tag_id INTEGER
         REFERENCES foodora_tag(id) ON DELETE CASCADE NOT NULL
 );
+
+-- IS CASCADE USED HERE CORRECTLY? LOGICALLY SPEAKING?
