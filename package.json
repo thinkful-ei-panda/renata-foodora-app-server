@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "seed": "psql -U dunder_mifflin -d foodora -f ./sql-scripts/seed.foodora.sql",
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
     "migrate": "postgrator --config postgrator-config.js",
@@ -26,7 +27,7 @@
     "helmet": "^3.23.3",
     "knex": "^0.21.2",
     "morgan": "^1.10.0",
-    "pg": "^8.3.0",
+    "pg": "^7.12.0",
     "postgrator": "^4.0.1",
     "valid-url": "^1.0.9",
     "winston": "^3.3.3",

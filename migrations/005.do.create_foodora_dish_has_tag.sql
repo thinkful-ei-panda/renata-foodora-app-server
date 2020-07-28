@@ -3,7 +3,7 @@ CREATE TABLE foodora_dish_has_tag (
     dish_id INTEGER
         REFERENCES foodora_dish(id) ON DELETE CASCADE NOT NULL,
     tag_id INTEGER
-        REFERENCES foodora_tag(id) ON DELETE CASCADE NOT NULL
+        REFERENCES foodora_tag(id) ON DELETE CASCADE NOT NULL,
+    test TEXT,
+    UNIQUE(dish_id, tag_id)
 );
-
--- IS CASCADE USED HERE CORRECTLY? LOGICALLY SPEAKING?
