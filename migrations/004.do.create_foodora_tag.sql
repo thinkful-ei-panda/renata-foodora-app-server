@@ -1,4 +1,4 @@
-CREATE TYPE tag AS ENUM (
+CREATE TYPE foodora_tag AS ENUM (
   'Gluten Free',
   'Peanut Allergy',
   'Keto',

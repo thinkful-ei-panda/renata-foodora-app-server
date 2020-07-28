@@ -4,6 +4,7 @@ TRUNCATE
 foodora_dish,
 foodora_restaurants,
 foodora_users
+RESTART IDENTITY CASCADE;
 
 
 INSERT INTO foodora_users (first_name, last_name, email, user_address, password, zip, city, phone, state)
@@ -16,7 +17,7 @@ VALUES
 ('Leroy', 'Jenkins', 'lejenkins@gmail.com', null, 'wowrules', '12345', null, null, 'IN')
 
 
-INSERT INTO foodora_restaurants (username, password, restaurant_name, restaurant_address, city, zip, state, phone, url, email)
+INSERT INTO foodora_restaurant (username, password, restaurant_name, restaurant_address, city, zip, state, phone, url, email)
 VALUES
 ('Zumbo', 'thebestintown', 'Zumbo Sweets', '123 Whatever Ln', 'Dallas', '12122', null, null, 'www.zumbo.com', 'zumbo@gmail.com'),
 ('HKGordon', 'hellkitchenftw', 'HK', '674 5th Ave', 'NY', '23533', 'NY', '888-654-8989', 'www.hk.com', 'hkgordon@gmail.com'),
