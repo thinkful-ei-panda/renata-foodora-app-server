@@ -1,4 +1,3 @@
-const { default: xss } = require("xss");
 const xss = require('xss');
 const bcrypt = require('bcryptjs');
 
@@ -13,7 +12,7 @@ const restValidation = {
     if(password.length > 12){
       return 'Password needs to be shorter than 12 characters.';
     }
-    if(password.startsWith(' ') || pass.endsWith(' ')){
+    if(password.startsWith(' ') || password.endsWith(' ')){
       return 'Password must not have empty spaces.';
     }
     if(!validation.test(password)){
@@ -23,28 +22,28 @@ const restValidation = {
   },
 
   checkRestLogin(db, username){
-      return db('foodora_restaurant')
+    return db('restaurant')
       .where({ username })
       .first()
       .then((rest) => !!rest);
   },
 
   insertRest(db, newRest){
-      return db
+    return db
       .insert(newRest)
-      .into('foodora_restaurant')
+      .into('restaurant')
       .returning('*')
       .then(([rest]) => rest);
   },
 
   serialRest(rest){
-      return{
-          id: rest.id,
-          username: xss(rest.username),
-          password: xss(rest.password),
-          name: rest.name,
-          phone: rest.phone,
-      }; //DO I NEED TO XSS ANY OF THESE FIELDS?
+    return{
+      id: rest.id,
+      username: xss(rest.username),
+      password: xss(rest.password),
+      name: rest.name,
+      phone: rest.phone,
+    }; //DO I NEED TO XSS ANY OF THESE FIELDS?
   },
 
   passHash(password){

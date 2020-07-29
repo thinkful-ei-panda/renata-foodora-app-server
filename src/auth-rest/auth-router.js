@@ -14,8 +14,7 @@ authRouter.route('/login').post(bodyParser, (req, res, next) => {
   authRestaurant.getRestUsername(req.app.get('db'), restLogin.username)
     .then((dbRest) => {
       if(!dbRest)
-        return
-      res.status(400).json({ error: 'Incorrect Username or Password'});
+        return res.status(400).json({ error: 'Incorrect Username or Password'});
       return authRestaurant.compareRestPass(
         restLogin.password,
         dbRest.password
