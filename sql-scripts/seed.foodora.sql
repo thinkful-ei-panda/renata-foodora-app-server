@@ -1,11 +1,11 @@
 BEGIN;
 
 TRUNCATE
-foodora_dish_has_tag,
-foodora_tag,
-foodora_dish,
-foodora_restaurant,
 foodora_user,
+foodora_restaurant,
+foodora_dish,
+foodora_tag,
+foodora_dish_has_tag
 RESTART IDENTITY CASCADE;
 
 
@@ -92,7 +92,7 @@ VALUES
   (2, 3),
   (2, 9),
   (2, 5),
-  (2, 9),
+  (2, 4),
   (2, 10),
   (2, 12),
   (2, 14),
@@ -165,7 +165,7 @@ VALUES
   (9, 2),
   (9, 3),
   (9, 4),
-  (9, 5)
+  (9, 5),
   (9, 6),
   (9, 7),
   (9, 8),
@@ -193,7 +193,7 @@ VALUES
   (11, 13),
   (11, 14),
   (12, 2),
-  (12, 3),
+  (12, 1),
   (12, 4),
   (12, 5),
   (12, 15),
@@ -224,7 +224,7 @@ VALUES
   (14, 2),
   (14, 3),
   (15, 16),
-  (15, 35),
+  (15, 1),
   (15, 14),
   (15, 11),
   (15, 12),
