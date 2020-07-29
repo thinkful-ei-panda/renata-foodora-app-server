@@ -1,51 +1,50 @@
-
+const xss = require('xss');
 
 const restaurantDish = {
   showAllDishes(db, id){
     return db
       .select(
-        'foodora_dish.id',
-        'foodora_dish.restaurant_id',
-        'foodora_restaurant.restaurant_name',
-        'foodora_dish.dish_name',
-        'foodora_dish.price',
-        'foodora_tag.name'
+        'dish.id',
+        'dish.restaurant_id',
+        'dish.name',
+        'dish.price',
+        'restaurant.name',
+        'restaurant.phone',
+        'tag.tag'
       )
-      .from('foodora_dish')
+      .from('dish')
       .join(
-        'foodora_dish',
-        'foodora.restaurant.restaurant_name',
-        'foodora_tag'
+        'dish',
+        'restaurant.name',
+        'restaurant.phone',
+        'tag'
       )
-      .where('restaurant_id', id) //finish this line
+      .where('restaurant_id', id); 
   },
 
   addDish(db, newDish){
-      return db
+    return db
       .insert(newDish)
-      .into('foodora_dish')
+      .into('dish')
       .returning('*')
-      .then(([dish]) => dish) //WHAT SHOULD I PUT HERE? 
+      .then(([dish]) => dish);
   },
 
-  deleteDish(db, dish_id){ //HOW TO DELETE SPECIFICALLY THE ID OF DISH?
-    return db('foodora_dish')
-    .where('id', dish_id)
-    .delete()
+  deleteDish(db, dish_id){ 
+    return db('dish')
+      .where('id', dish_id)
+      .delete();
   },
 
-  serialDish(){ //WHAT WOULD BE THE PARAM HERE?
+  serialDish(dish){ 
     return{
-        id:
+      id: dish.id,
+      name: xss(dish.name),
+      price: dish.price,
+      restaurant_id: dish.restaurant_id,
+      dish_img: dish.dish_img || null
     };
   },
-  
 };
-
-// DO I NEED TO PUT ALL THE ITEMS ON THE TABLE? OR CAN I SKIP ONE?
-
-dish_name, price, restaurant_id + name
-foodora_dish.id +
-foodora_tag.name
 
 module.exports = restaurantDish;
