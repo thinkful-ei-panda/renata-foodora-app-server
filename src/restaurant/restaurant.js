@@ -6,17 +6,17 @@ const validation = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[\S]+/;
 
 const restValidation = {
 
-  passValidation(pass){
-    if(pass.length < 6) {
+  passValidation(password){
+    if(password.length < 6) {
       return 'Password needs to be longer than 6 characters.';
     }
-    if(pass.length > 12){
+    if(password.length > 12){
       return 'Password needs to be shorter than 12 characters.';
     }
-    if(pass.startsWith(' ') || pass.endsWith(' ')){
+    if(password.startsWith(' ') || pass.endsWith(' ')){
       return 'Password must not have empty spaces.';
     }
-    if(!validation.test(pass)){
+    if(!validation.test(password)){
       return 'Password must have a uppercase, lowercase and a number.';
     }
     return null;

@@ -37,8 +37,8 @@ const restaurantDish = {
   serialDish(){ //WHAT WOULD BE THE PARAM HERE?
     return{
         id:
-    }
-  }
+    };
+  },
   
 };
 
