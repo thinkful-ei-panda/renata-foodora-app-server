@@ -8,8 +8,16 @@ const authUser = {
   },
 
   comparePass(password, hash){
-      return bcrypt.compare(password, hash);
-  }
+    return bcrypt.compare(password, hash);
+  },
+
+  createJWT(){
+
+  },
+
+  verifyJWT(){
+
+  },
 
 
 
