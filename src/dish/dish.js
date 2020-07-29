@@ -1,5 +1,3 @@
-const xss = require('xss');
-
 const restaurantDish = {
   showAllDishes(db, id){
     return db
@@ -39,11 +37,11 @@ const restaurantDish = {
   serialDish(dish){ 
     return{
       id: dish.id,
-      name: xss(dish.name),
+      name: dish.name,
       price: dish.price,
       restaurant_id: dish.restaurant_id,
       dish_img: dish.dish_img || null
-    };
+    }; //DO I NEED TO XSS ANY OF THESE FIELDS?
   },
 };
 

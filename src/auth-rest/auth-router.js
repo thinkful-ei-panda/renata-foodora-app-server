@@ -22,7 +22,7 @@ authRouter.route('/login').post(bodyParser, (req, res, next) => {
       )
         .then((match) => {
           if(!match)
-            return res.status(400).json({error: 'Incorrect Username or Password'});
+            return res.status(400).json({error:'Incorrect Username or Password'});
           const subject = dbRest.username;
           const payload = {restaurant_id: dbRest.restaurant_id};
           res.send({

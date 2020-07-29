@@ -36,16 +36,20 @@ const restValidation = {
       .returning('*')
       .then(([rest]) => rest);
   },
+
   serialRest(rest){
       return{
           id: rest.id,
           username: xss(rest.username),
           password: xss(rest.password),
+          name: rest.name,
+          phone: rest.phone,
+      }; //DO I NEED TO XSS ANY OF THESE FIELDS?
+  },
 
-      }
-  }
-
-//   username, password, restaurant_name, restaurant_address, city, zip, state, phone, url, email
+  passHash(password){
+    return bcrypt.hash(password, 12);
+  },
 };
 
 module.exports = restValidation;
