@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS foodora_dish_has_tag;

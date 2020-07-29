@@ -1,0 +1,6 @@
+ON POST IF I HAVE A, B, C AS REQ.BODY BUT 
+I HAVE A, B, C, D, E, F, G IN THE TABLE,
+DO I STILL NEED TO MENTION THE NON REQ.BODY?
+
+
+example on cabinet-router ln 21

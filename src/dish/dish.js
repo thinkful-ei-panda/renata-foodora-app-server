@@ -17,7 +17,7 @@ const restaurantDish = {
         'foodora.restaurant.restaurant_name',
         'foodora_tag'
       )
-      .where() //finish this line
+      .where('restaurant_id', id) //finish this line
   },
 
   addDish(db, newDish){
@@ -25,7 +25,7 @@ const restaurantDish = {
       .insert(newDish)
       .into('foodora_dish')
       .returning('*')
-      .then(([]) => ) //WHAT SHOULD I PUT HERE? 
+      .then(([dish]) => dish) //WHAT SHOULD I PUT HERE? 
   },
 
   deleteDish(db, dish_id){ //HOW TO DELETE SPECIFICALLY THE ID OF DISH?

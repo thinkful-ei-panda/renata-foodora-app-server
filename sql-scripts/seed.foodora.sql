@@ -1,63 +1,56 @@
 BEGIN;
 
 TRUNCATE
-foodora_user,
-foodora_restaurant,
-foodora_dish,
-foodora_tag,
-foodora_dish_has_tag
+dish_has_tag,
+tag,
+dish,
+restaurant
 RESTART IDENTITY CASCADE;
 
-
-INSERT INTO foodora_user (first_name, last_name, email, user_address, password, zip, city, phone, state)
+INSERT INTO restaurant (username, password, name, phone)
 VALUES
-('Kate', 'Robertson', 'kater@gmail.com', '2304 Covid Ln', 'thepassword', '12123', 'Los Angeles', '222-222-2222', 'CA'),
-('Doug', 'Junior', 'djunior@gmail.com', '34 Memory Ln', 'whatever', null, null, null, null),
-('Bob', 'Short', 'bobshort@gmail.com', null, 'eatfresh', null, null, null, null),
-('James', 'Hetfield', 'jahe@gmail.com', '23 James Ln', 'metallica', '32234', 'LA', '123-123-2222', 'CA'),
-('Dave', 'Grohl', 'daveg@gmail.com', '342 Junior Ct', 'foofighters', '34234', 'NY', '234-234-1212', 'NY'),
-('Leroy', 'Jenkins', 'lejenkins@gmail.com', null, 'wowrules', '12345', null, null, 'IN');
+('zumbo', 'thebestintown', 'Zumbo Eatery', '222-222-2222'),
+('hkgordon', 'hellkitchenftw', 'HK', '317-233-1122'),
+('losmocahetes', 'loschicos', 'Los Mocahetes', '333-333-3333'),
+('walsmart', 'weneedmorewalmart', 'Walsmart', '206-123-4567'),
+('picodegalo', 'salsaisawesome', 'Pico de Galo', '202-123-1234'),
+('terra', 'terraisbest', 'Terra', '234-234-2323'),
+('oliviaitaly', 'italy22', 'Olivia Italian Eatery', '234-234-2222'),
+('Taste of Italy', 'tasteitaly11', 'Taste of Italy', '233-345-4566'),
+('jackgrill', 'jackgrill123', 'Jack & Grill', '345-356-2222'),
+('asianbistro', 'thebistro202', 'Asian Bistro', '203-567-2342');
 
-INSERT INTO foodora_restaurant (username, password, restaurant_name, restaurant_address, city, zip, state, phone, url, email)
-VALUES
-('zumbo', 'thebestintown', 'Zumbo Sweets', '123 Whatever Ln', 'Dallas', '12122', null, null, 'www.zumbo.com', 'zumbo@gmail.com'),
-('hkgordon', 'hellkitchenftw', 'HK', '674 5th Ave', 'NY', '23533', 'NY', '888-654-8989', 'www.hk.com', 'hkgordon@gmail.com'),
-('losmocahetes', 'loschicos', 'Los Mocahetes', '3242 Moore Ln', 'Dallas', '23566', 'TX', '987-563-2334', 'www.losmocha.com', 'losmocha@gmail.com'),
-('walsmart', 'weneedmorewalmart', 'Walsmart', '234234 Again Ln', 'NY', '23422', 'NY', '324-233-2423', 'www.walsmart.com', 'walsmart@gmail.com'),
-('picodegalo', 'salsaisawesome', 'Pico de Galo', '43 Nothing Ln', 'Indianapolis', '65687', null, null, 'www.picodegalo.com', 'picodegalo@gmail.com');
-
-
-INSERT INTO foodora_dish (dish_name, price, restaurant_id)
+INSERT INTO dish (name, price, restaurant_id)
 VALUES
 ('Ceasar Salad', 12, 3),
 ('Bunless Burger', 9, 5),
-('Croissant', 5, 3),
+('Croissant', 5, 9),
 ('Italian Pasta', 21, 1),
-('Salsa and quejo', 15, 3),
+('Salsa and quejo', 15, 6),
 ('Pollo loco', 35, 2),
-('Omelete with SourCream', 58, 2),
-('Mini Napoleons with Caviar sauce', 100, 5),
-('Scallops with Potato', 45, 4),
+('Omelete with SourCream', 58, 7),
+('Mini Napoleons with Caviar sauce', 100, 8),
+('Scallops with Potato', 45, 10),
 ('Salmon Trout Tartare', 75, 4),
 ('Crispy Potato Galette with Dill Cream', 80, 1),
-('Roasted Fingerling Potato and Pressed Caviar Canapes', 95, 2),
+('Roasted Fingerling Potato and Pressed Caviar Canapes', 95, 9),
 ('Cauliflower Fritters', 29, 3),
-('Sorrel Mousse with Lemon Cream', 54, 3),
+('Sorrel Mousse with Lemon Cream', 54, 6),
 ('Celery Root Remoulade with Scallops and Caviar', 97, 5),
-('Deviled Eggs', 39, 5),
-('Potato Wedgers', 19, 1),
+('Deviled Eggs', 39, 7),
+('Potato Wedgers', 19, 8),
 ('Bruschetta', 7, 2),
 ('Calliflower Fritters', 16, 3),
 ('Cobb Salad', 20, 4),
-('Grilled Eggplant Salad', 11, 5),
+('Grilled Eggplant Salad', 11, 10),
 ('Slow-Cooker Curried Butternut Squash Soup', 27, 1),
 ('Escalivada', 31, 2),
 ('Chipotle-Orange Broccoli & Tofu', 44, 3),
 ('Fattoush Salad', 50, 4),
-('Raw Vegan Zoodles with Romesco', 67, 5); --26
+('Raw Vegan Zoodles with Romesco', 67, 9); --26
 
 
-INSERT INTO foodora_tag (name)
+INSERT INTO tag (tag)
 VALUES
   ('Gluten Free'),  -- 1
   ('Peanut Allergy'), 
@@ -77,7 +70,7 @@ VALUES
   ('Vegetarian'),
   ('Vegan'); --17
 
-  INSERT INTO foodora_dish_has_tag (dish_id, tag_id)
+  INSERT INTO dish_has_tag (dish_id, tag_id)
   VALUES
   (1, 1),
   (1, 2),
