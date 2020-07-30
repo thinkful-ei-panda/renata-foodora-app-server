@@ -3,12 +3,13 @@ const restaurantDish = {
     return db
       .select(
         'dish.id',
-        'dish.restaurant_id',
+        'dish.restaurant_id', 
         'dish.name',
         'dish.price',
         'restaurant.name',
         'restaurant.phone',
         'tag.tag'
+        //TODO: NEED TO REDO THIS
       )
       .from('dish')
       .join(
@@ -41,7 +42,7 @@ const restaurantDish = {
       price: dish.price,
       restaurant_id: dish.restaurant_id,
       dish_img: dish.dish_img || null
-    }; //DO I NEED TO XSS ANY OF THESE FIELDS?
+    }; //TODO: DO I NEED TO XSS ANY OF THESE FIELDS?
   },
 };
 

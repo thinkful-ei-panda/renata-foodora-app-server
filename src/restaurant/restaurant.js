@@ -22,16 +22,16 @@ const restValidation = {
   },
 
   checkRestLogin(db, username){
-    return db('restaurant')
+    return db('foodora')
       .where({ username })
       .first()
       .then((rest) => !!rest);
   },
 
-  insertRest(db, newRest){
+  addRest(db, newRest){
     return db
       .insert(newRest)
-      .into('restaurant')
+      .into('foodora')
       .returning('*')
       .then(([rest]) => rest);
   },
@@ -43,7 +43,7 @@ const restValidation = {
       password: xss(rest.password),
       name: rest.name,
       phone: rest.phone,
-    }; //DO I NEED TO XSS ANY OF THESE FIELDS?
+    }; //TODO: DO I NEED TO XSS ANY OF THESE FIELDS?
   },
 
   passHash(password){

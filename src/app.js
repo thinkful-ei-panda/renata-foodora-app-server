@@ -4,6 +4,9 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
+const restRouter = require('./restaurant/restaurant-router');
+const authRouter = require('./auth-rest/auth-router');
+const restaurantDishRouter = require('./dish/dish-router');
 
 const app = express();
 
@@ -11,11 +14,17 @@ const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
   : 'common';
 
-app.use(morgan(morganOption));
+app.use(
+  morgan(morganOption, {
+    skip: () => NODE_ENV === 'test',
+  })
+);
 app.use(helmet());
 app.use(cors());
 
-// PUT THE ROUTERS HERE
+app.use('/restaurant', restRouter);
+app.use('/auth', authRouter);
+app.use('/dish', restaurantDishRouter);
 
 app.use(function errorHandler(error, req, res, next) {
   let response;

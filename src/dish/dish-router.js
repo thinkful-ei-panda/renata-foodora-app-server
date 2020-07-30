@@ -21,6 +21,7 @@ restaurantDishRouter
 
     if(name == null)
       return res.status(400).json({error: 'Missing Restaurant Name in request body.'});
+      //TODO: IS THIS SUPPOSED TO BE == or ===?
 
     restaurantDish.addDish(
       req.app.get('db'),

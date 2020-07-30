@@ -9,19 +9,28 @@ authRouter.route('/login').post(bodyParser, (req, res, next) => {
 
   for(const [key, value] of Object.entries(restLogin))
     if(value == null)
-      return res.status(400).json({error: `Missing '${key}' in request body`});
+      return res
+        .status(400)
+        .json({error: `Missing '${key}' in request body`});
+  //TODO: SHOULD I DO A === OR ==?
 
   authRestaurant.getRestUsername(req.app.get('db'), restLogin.username)
     .then((dbRest) => {
       if(!dbRest)
-        return res.status(400).json({ error: 'Incorrect Username or Password'});
+        return res
+          .status(400)
+          .json({ error: 'Incorrect Username or Password'});
+
       return authRestaurant.compareRestPass(
         restLogin.password,
         dbRest.password
       )
         .then((match) => {
           if(!match)
-            return res.status(400).json({error:'Incorrect Username or Password'});
+            return res
+              .status(400)
+              .json({error:'Incorrect Username or Password'});
+
           const subject = dbRest.username;
           const payload = {restaurant_id: dbRest.restaurant_id};
           res.send({
