@@ -1,29 +1,24 @@
 const authRestaurant = require('../auth-rest/auth-rest');
 
-const requireAuth = function(req, res, next){
-
+const requireAuth = function (req, res, next) {
   const token = req.get('Authorization') || '';
 
   let bearerToken;
 
-  if (!token.toLowerCase().startsWith('bearer ')){
-    return res
-      .status(401)
-      .json({error: 'Missing Bearer Token.'});
-  }
-  else {
+  if (!token.toLowerCase().startsWith('bearer ')) {
+    return res.status(401).json({ error: 'Missing Bearer Token.' });
+  } else {
     bearerToken = token.slice(7, token.length);
   }
 
   try {
     const payload = authRestaurant.verifyRestJWT(bearerToken);
 
-    authRestaurant.getRestUsername(req.app.get('db'), payload.subject)
+    authRestaurant
+      .getRestUsername(req.app.get('db'), payload.subject)
       .then((rest) => {
-        if(!rest) {
-          return res
-            .status(401)
-            .json({error: 'Unauthorized request'});
+        if (!rest) {
+          return res.status(401).json({ error: 'Unauthorized request' });
         }
         req.rest = rest;
         next();
@@ -32,12 +27,9 @@ const requireAuth = function(req, res, next){
         console.log(err);
         next(err);
       });
-  } 
-  catch (error) {
-    res
-      .status(401)
-      .json({error: 'Unauthorized request'});
+  } catch (error) {
+    res.status(401).json({ error: 'Unauthorized request' });
   }
-}
+};
 
 module.exports = requireAuth;

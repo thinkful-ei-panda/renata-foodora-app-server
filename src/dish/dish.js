@@ -1,27 +1,28 @@
+const xss = require('xss');
+
 const restaurantDish = {
-  showAllDishes(db, id){
+  showAllDishes(db, id) {
     return db
       .select(
         'dish.id',
-        'dish.restaurant_id', 
+        'dish.restaurant_id',
         'dish.name',
         'dish.price',
         'restaurant.name',
         'restaurant.phone',
         'tag.tag'
-        //TODO: NEED TO REDO THIS
       )
       .from('dish')
       .join(
-        'dish',
-        'restaurant.name',
-        'restaurant.phone',
-        'tag'
+        ('dish_has_tag', 'dish.id', '=', 'dish_has_tag.dish_id'),
+        ('restaurant', 'dish.restaurant_id', '=', 'restaurant.id'),
+        ('tag', 'dish_has_tag.tag_id', '=', 'tag.id')
       )
-      .where('restaurant_id', id); 
+      .where('restaurant_id', id)
+      .orderBy(['dish.name', 'restaurant.name', 'tag.tag']);
   },
 
-  addDish(db, newDish){
+  addDish(db, newDish) {
     return db
       .insert(newDish)
       .into('dish')
@@ -29,20 +30,18 @@ const restaurantDish = {
       .then(([dish]) => dish);
   },
 
-  deleteDish(db, dish_id){ 
-    return db('dish')
-      .where('id', dish_id)
-      .delete();
+  deleteDish(db, dish_id) {
+    return db('dish').where('id', dish_id).delete();
   },
 
-  serialDish(dish){ 
-    return{
+  serialDish(dish) {
+    return {
       id: dish.id,
-      name: dish.name,
-      price: dish.price,
-      restaurant_id: dish.restaurant_id,
-      dish_img: dish.dish_img || null
-    }; //TODO: DO I NEED TO XSS ANY OF THESE FIELDS?
+      name: xss(dish.name),
+      price: xss(dish.price),
+      restaurant_id: xss(dish.restaurant_id),
+      //dish_img: dish.dish_img || null,
+    };
   },
 };
 

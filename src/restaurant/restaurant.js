@@ -41,9 +41,9 @@ const restValidation = {
       id: rest.id,
       username: xss(rest.username),
       password: xss(rest.password),
-      name: rest.name,
-      phone: rest.phone,
-    }; //TODO: DO I NEED TO XSS ANY OF THESE FIELDS?
+      name: xss(rest.name),
+      phone: xss(rest.phone),
+    }; 
   },
 
   passHash(password){

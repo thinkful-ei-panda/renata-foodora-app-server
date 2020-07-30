@@ -8,11 +8,10 @@ authRouter.route('/login').post(bodyParser, (req, res, next) => {
   const restLogin = {username, password};
 
   for(const [key, value] of Object.entries(restLogin))
-    if(value == null)
+    if(value === null)
       return res
         .status(400)
         .json({error: `Missing '${key}' in request body`});
-  //TODO: SHOULD I DO A === OR ==?
 
   authRestaurant.getRestUsername(req.app.get('db'), restLogin.username)
     .then((dbRest) => {

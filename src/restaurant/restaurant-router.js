@@ -5,25 +5,21 @@ const restRouter = express.Router();
 const jsonBodyParser = express.json();
 
 restRouter.post('/', jsonBodyParser, (req, res, next) => {
-
-  const {username, password, name, phone} = req.body;
+  const { username, password, name, phone } = req.body;
   for (const field of ['username', 'password', 'name', 'phone'])
-    if(!req.body[field])
-      return res
-        .status(400)
-        .json({error:`'${field}' is required`});
+    if (!req.body[field])
+      return res.status(400).json({ error: `'${field}' is required` });
 
   const passError = restValidation.passValidation(password);
-  if(passError) return res
-    .status(400)
-    .json({error: passError});
+  if (passError) return res.status(400).json({ error: passError });
 
-  restValidation.checkRestLogin(req.app.get('db'), username)
+  restValidation
+    .checkRestLogin(req.app.get('db'), username)
     .then((validRest) => {
-      if(validRest)
+      if (validRest)
         return res
           .status(400)
-          .json({error: 'Username already exists. Try again.'});
+          .json({ error: 'Username already exists. Try again.' });
 
       return restValidation.passHash(password).then((hashedPass) => {
         const newRest = {
@@ -33,17 +29,20 @@ restRouter.post('/', jsonBodyParser, (req, res, next) => {
           phone,
         };
 
-        return restValidation.addRest(req.app.get('db'), newRest).then((rest) => {
-          res
-            .status(201)
-            .location(
-              path.posix.join(
-                'USER THE HEROKU LINK HERE',
-                `/restaurant/${rest.id}`
+        return restValidation
+          .addRest(req.app.get('db'), newRest)
+          .then((rest) => {
+            res
+              .status(201)
+              .location(
+                path.posix.join(
+                  'http://localhost:8080',
+                  //TODO'USE THE HEROKU LINK HERE'
+                  `/restaurant/${rest.id}`
+                )
               )
-            )
-            .json(restValidation.serialRest(rest));
-        });
+              .json(restValidation.serialRest(rest));
+          });
       });
     })
     .catch(next);
