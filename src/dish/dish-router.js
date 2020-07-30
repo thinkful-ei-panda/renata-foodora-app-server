@@ -11,8 +11,11 @@ restaurantDishRouter
     const { restaurant_id } = req.params;
     restaurantDish
       .showAllDishes(req.app.get('db'), restaurant_id)
+      //TODO showallDishes
       .then((restaurant) => {
-        res.status(200).json(restaurant);
+        res
+          .status(200)
+          .json(restaurant);
       })
       .catch(next);
   })
@@ -28,7 +31,9 @@ restaurantDishRouter
     restaurantDish
       .addDish(req.app.get('db'), newDish)
       .then((dish) => {
-        res.status(201).json(restaurantDish.serialDish(dish));
+        res
+          .status(201)
+          .json(restaurantDish.serialDish(dish));
       })
       .catch(next);
   })
@@ -38,7 +43,9 @@ restaurantDishRouter
     restaurantDish
       .deleteDish(req.app.get('db'), id)
       .then(() => {
-        res.status(204).end();
+        res
+          .status(204)
+          .end();
       })
       .catch(next);
   });

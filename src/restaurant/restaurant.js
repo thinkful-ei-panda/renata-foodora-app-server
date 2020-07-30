@@ -21,8 +21,15 @@ const restValidation = {
     return null;
   },
 
+  phoneValidation(phone){
+    if(phone.length !== 10){
+      return 'Phone needs to be 10 digits.';
+    }
+    return null;
+  },
+
   checkRestLogin(db, username){
-    return db('foodora')
+    return db('restaurant')
       .where({ username })
       .first()
       .then((rest) => !!rest);
@@ -31,7 +38,7 @@ const restValidation = {
   addRest(db, newRest){
     return db
       .insert(newRest)
-      .into('foodora')
+      .into('restaurant')
       .returning('*')
       .then(([rest]) => rest);
   },
