@@ -1,0 +1,5 @@
+{"message":"Dish with 55 id not found.","level":"error"}
+{"message":"Dish with 55 id not found.","level":"error"}
+{"message":"Dish with 45 id deleted.","level":"info"}
+{"message":"Dish with 44 id deleted.","level":"info"}
+{"message":"Dish with 100 id not found.","level":"error"}

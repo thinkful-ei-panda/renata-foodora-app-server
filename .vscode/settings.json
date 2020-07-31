@@ -3,5 +3,8 @@
     "prettier.singleQuote": true,
     "files.autoSave": "afterDelay",
     "editor.cursorBlinking": "smooth",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "cSpell.words": [
+        "restaurantname"
+    ]
 }
