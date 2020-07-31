@@ -32,7 +32,7 @@ authRouter.route('/login')
                 .json({error:'Incorrect Username or Password'});
 
             const subject = dbRest.username;
-            const payload = {restaurant_id: dbRest.restaurant_id};
+            const payload = { restaurant_id: dbRest.restaurant_id };
             res.send({
               authToken: authRestaurant.createRestJWT(subject, payload),
               restaurant_id: payload.restaurant_id,
