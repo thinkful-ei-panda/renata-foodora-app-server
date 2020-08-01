@@ -1,27 +1,47 @@
-
-
 const restaurantDishService = {
   showAllDishes(db, id) {
     //console.log('id=' + id);
     //TODO
     return db
       .select(
-        'dish.id',
-        'dish.restaurant_id',
-        'dish.name',
-        'dish.price',
-        'restaurant.name as restaurantname',
-        'restaurant.phone',
-        'tag.tag'
+        'd.id',
+        'd.restaurant_id',
+        'd.name',
+        'd.price',
+        'r.name as restaurantname',
+        'r.phone',
+        't.tag'
       )
-      .from('dish')
-      .join(
-        'dish_has_tag', 'dish.id', '=', 'dish_has_tag.dish_id',
-        'restaurant','dish.restaurant_id','restaurant.id',
-        'tag', 'dish_has_tag.tag_id', '=', 'tag.id'
-      )
-      .where('dish.restaurant_id', id)
-      .orderBy(['dish.name', 'restaurant.name', 'tag.tag']);
+      .from({d:'dish'})
+      .leftJoin({r:'restaurant'}, 'd.restaurant_id', '=', 'r.id')
+      .leftJoin({dht:'dish_has_tag'}, 'd.id', '=', 'dht.dish_id')
+      .leftJoin({t:'tag'}, 'dht.tag_id', '=', 't.id')
+      // .join(
+      //   'dish_has_tag', 'dish.id', 'dish_has_tag.dish_id',
+      //   'restaurant','dish.restaurant_id','restaurant.id',
+      //   'tag', 'dish_has_tag.tag_id', 'tag.id'
+      // )
+      //TODO DONT UNCOMMENT WHERE
+//      .where('d.restaurant_id', id)
+      .then(results => {
+        return results.reduce((result, unflatDish) => {
+          result[unflatDish.id] = result[unflatDish.id] || {
+            ...unflatDish,
+            tags: []
+          };
+
+          result[unflatDish.id].tags.push(unflatDish.tag);
+          return result;
+          //   one.dish_id = two.dish_id;
+          // }
+          // if(!one.tag_id){
+          //   one.tag_id = [];
+          // }
+          // one.tag_id.push(two.)
+          // return one;
+        }, {});
+      });
+      //.orderBy(['dish.name', 'restaurant.name', 'tag.tag']);
   },
 
   addDish(db, newDish) {
@@ -52,10 +72,12 @@ const restaurantDishService = {
       .delete();
   },
 
-  updateDish(db, price,  newDish) {
+  updateDish(db, id, price) {
+    //console.log('THIS IS ID =' + JSON.stringify(id)); 
+    //console.log('THIS IS PRICE =' + JSON.stringify(price));
     return db('dish')
-      .where((price))
-      .update(newDish);
+      .where('id', '=', id)
+      .update({price: price});  
   }
 };
 

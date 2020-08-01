@@ -27,13 +27,17 @@ restaurantDishRouter
       .catch(next);
   })
   .post(bodyParser, (req, res, next) => {
-    const { restaurant_id, name, price } = req.body;
-    const newDish = { restaurant_id, name, price };
-
-    if (name === null)
+    if (!req.body['restaurant_id', 'name', 'price']){
+      logs.error('restaurant_id, name, price is required');
       return res
         .status(400)
-        .json({ error: 'Missing Restaurant Name in request body.' });
+        .json({ error: 'Missing Restaurant Name and Price in request body.' 
+        });
+    }
+
+
+    const { restaurant_id, name, price } = req.body;
+    const newDish = { restaurant_id, name, price };
 
     restaurantDishService
       .addDish(req.app.get('db'), newDish)
@@ -82,19 +86,23 @@ restaurantDishRouter
   })
   .patch(bodyParser, (req, res, next) => {
     //TODO NOT WORKING
-    const { price } = req.body;
-    const priceUpdate = { price };
+    const id = req.params.id;
+    const price = req.query.price;
+    console.log('patch, id=' + id + ', price=' + price);
+    //const priceUpdate = { price };
+    //console.log('patch, priceUpdate=' + JSON.stringify(priceUpdate));
 
-    if( Object.keys(priceUpdate).length <1){
-      return res
-        .status(400)
-        .json({ error: 'Update must contain price.'});
-    }
+    //if( Object.keys(priceUpdate).length <1){
+    //   return res
+    //     .status(400)
+    //     .json({ error: 'Update must contain price.'});
+    // }
 
     restaurantDishService.updateDish(
       req.app.get('db'),
-      req.params.idm,
-      priceUpdate
+      id,
+      price
+      //console.log('line 101' + priceUpdate)
     )
       .then(() => {
         res
@@ -106,16 +114,15 @@ restaurantDishRouter
 
 restaurantDishRouter
   .route('/dishSearchResults')
-  //.get((req, res, next) => {
 //TODO NOT WORKING
   .get((req, res, next) => {
-    //console.log(req.query.restaurant_id);
+    console.log(req.query.restaurant_id);
     const restaurant_id = req.query.restaurant_id;
     restaurantDishService.showAllDishes(
       req.app.get('db'), 
       restaurant_id)
       .then(dishes => {
-        //console.log('dishes' + JSON.stringify(dishes));
+        console.log('dishes' + JSON.stringify(dishes));
         if(!dishes){
           logs.error(`Search result with ${restaurant_id} id not found.`);
           return res
@@ -127,13 +134,11 @@ restaurantDishRouter
         //console.log('line 128 - after' + res);
         next();
       })
-      //TODO making an array and loop thru dishes
-      //TODO call serialdish on each dish and push the result on an array
       .catch(next);
   });
-  // .get((req, res) => {
-  //   res.json(serialDish(res.dish));
-  // });
+// .get((req, res) => {
+//   res.json(serialDish(res.dish));
+// });
 //req.params('restaurant_id'))
 // .then(restaurant => {
 //   res

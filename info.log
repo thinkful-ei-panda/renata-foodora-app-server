@@ -3,3 +3,32 @@
 {"message":"Dish with 45 id deleted.","level":"info"}
 {"message":"Dish with 44 id deleted.","level":"info"}
 {"message":"Dish with 100 id not found.","level":"error"}
+{"message":"db.update(...).set is not a function","level":"error"}
+{"message":"db.update(...).set is not a function","level":"error"}
+{"message":"Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query. Table: dish. Columns: price.","level":"error"}
+{"message":"Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query. Table: dish. Columns: price.","level":"error"}
+{"message":"Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query. Table: dish. Columns: price.","level":"error"}
+{"message":"Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query. Table: dish. Columns: price.","level":"error"}
+{"message":"params is not defined","level":"error"}
+{"message":"Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query. Table: dish. Columns: price.","level":"error"}
+{"message":"Undefined binding(s) detected when compiling UPDATE. Undefined column(s): [dish.id] query: update \"dish\" set \"price\" = ? where \"dish\".\"id\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling UPDATE. Undefined column(s): [dish.id] query: update \"dish\" set \"price\" = ? where \"dish\".\"id\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling UPDATE. Undefined column(s): [price] query: update \"dish\" set \"price\" = ? where \"price\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling UPDATE. Undefined column(s): [price] query: update \"dish\" set \"id\" = ? where \"price\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling UPDATE. Undefined column(s): [price] query: update \"dish\" set \"id\" = ? where \"price\" = ?","level":"error"}
+{"message":"The operator \"dish_has_tag.dish_id\" is not permitted","level":"error"}
+{"message":"Undefined binding(s) detected when compiling SELECT. Undefined column(s): [dish.restaurant_id] query: select \"dish\".\"id\", \"dish\".\"restaurant_id\", \"dish\".\"name\", \"dish\".\"price\", \"restaurant\".\"name\" as \"restaurantname\", \"restaurant\".\"phone\", \"tag\".\"tag\" from \"dish\" left join \"restaurant\" on \"dish\".\"restaurant_id\" = \"restaurant\".\"id\" left join \"dish_has_tag\" on \"dish\".\"id\" = \"dish_has_tag\".\"dish_id\" left join \"tag\" on \"dish_has_tag\".\"tag_id\" = \"tag\".\"id\" where \"dish\".\"restaurant_id\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling SELECT. Undefined column(s): [dish.restaurant_id] query: select \"dish\".\"id\", \"dish\".\"restaurant_id\", \"dish\".\"name\", \"dish\".\"price\", \"r\".\"name\" as \"restaurantname\", \"r\".\"phone\", \"tag\".\"tag\" from \"dish\" left join \"restaurant\" as \"r\" on \"dish\".\"restaurant_id\" = \"restaurant\".\"id\" left join \"dish_has_tag\" on \"dish\".\"id\" = \"dish_has_tag\".\"dish_id\" left join \"tag\" on \"dish_has_tag\".\"tag_id\" = \"tag\".\"id\" where \"dish\".\"restaurant_id\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling SELECT. Undefined column(s): [dish.restaurant_id] query: select \"d\".\"id\", \"d\".\"restaurant_id\", \"d\".\"name\", \"d\".\"price\", \"r\".\"name\" as \"restaurantname\", \"r\".\"phone\", \"t\".\"tag\" from \"dish\" as \"d\" left join \"restaurant\" as \"r\" on \"d\".\"restaurant_id\" = \"r\".\"id\" left join \"dish_has_tag\" as \"dht\" on \"d\".\"id\" = \"dht\".\"dish_id\" left join \"tag\" as \"t\" on \"dht\".\"tag_id\" = \"t\".\"id\" where \"dish\".\"restaurant_id\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling SELECT. Undefined column(s): [dish.restaurant_id] query: select \"d\".\"id\", \"d\".\"restaurant_id\", \"d\".\"name\", \"d\".\"price\" from \"dish\" as \"d\" where \"dish\".\"restaurant_id\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling SELECT. Undefined column(s): [d.restaurant_id] query: select \"d\".\"id\", \"d\".\"restaurant_id\", \"d\".\"name\", \"d\".\"price\", \"r\".\"name\" as \"restaurantname\", \"r\".\"phone\", \"t\".\"tag\" from \"dish\" as \"d\" left join \"restaurant\" as \"r\" on \"d\".\"restaurant_id\" = \"r\".\"id\" left join \"dish_has_tag\" as \"dht\" on \"d\".\"id\" = \"dht\".\"dish_id\" left join \"tag\" as \"t\" on \"dht\".\"tag_id\" = \"t\".\"id\" where \"d\".\"restaurant_id\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling UPDATE. Undefined column(s): [price] query: update \"dish\" set \"id\" = ? where \"price\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling UPDATE. Undefined column(s): [price] query: update \"dish\" set \"id\" = ? where \"price\" = ?","level":"error"}
+{"message":"Cannot destructure property 'price' of 'req.param.price' as it is undefined.","level":"error"}
+{"message":"Undefined binding(s) detected when compiling UPDATE. Undefined column(s): [price] query: update \"dish\" set \"id\" = ? where \"price\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling UPDATE. Undefined column(s): [price] query: update \"dish\" set \"id\" = ? where \"price\" = ?","level":"error"}
+{"message":"Undefined binding(s) detected when compiling UPDATE. Undefined column(s): [price] query: update \"dish\" set \"id\" = ? where \"price\" = ?","level":"error"}
+{"message":"Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query. Table: dish. Columns: 43.","level":"error"}
+{"message":"Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query. Table: dish. Columns: 43.","level":"error"}
+{"message":"Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query. Table: dish. Columns: 43.","level":"error"}
+{"message":"The operator \"undefined\" is not permitted","level":"error"}

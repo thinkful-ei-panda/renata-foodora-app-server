@@ -1,4 +1,3 @@
-const xss = require('xss');
 const bcrypt = require('bcryptjs');
 
 const validation = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[\S]+/;
@@ -43,19 +42,9 @@ const restValidation = {
       .then(([rest]) => rest);
   },
 
-  serialRest(rest){
-    return{
-      id: rest.id,
-      username: xss(rest.username),
-      password: xss(rest.password),
-      name: xss(rest.name),
-      phone: xss(rest.phone),
-    }; 
-  },
-
   passHash(password){
     return bcrypt.hash(password, 12);
-  },
+  }
 };
 
 module.exports = restValidation;
