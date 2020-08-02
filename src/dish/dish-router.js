@@ -127,7 +127,7 @@ restaurantDishRouter
       restaurant_id
     )
       .then(dishes => {
-
+        logs.info('Request for search results successful.');
         if(!dishes){
           logs.error(`Search result with id ${dishes.id} not found.`);
           return res

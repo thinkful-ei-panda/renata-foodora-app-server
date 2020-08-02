@@ -1,4 +1,4 @@
-const authRestaurant = require('../auth-rest/auth-rest');
+const authRestaurantService = require('../auth-rest/auth-rest');
 
 const requireAuth = function (req, res, next) {
   const token = req.get('Authorization') || '';
@@ -14,9 +14,9 @@ const requireAuth = function (req, res, next) {
   }
 
   try {
-    const payload = authRestaurant.verifyRestJWT(bearerToken);
+    const payload = authRestaurantService.verifyRestJWT(bearerToken);
 
-    authRestaurant
+    authRestaurantService
       .getRestUsername(req.app.get('db'), payload.subject)
       .then((rest) => {
         if (!rest) {
