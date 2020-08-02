@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const config = require('../config');
 
-const authRestaurant = {
+const authRestaurantService = {
 
   getRestUsername(db, username){
     return db('restaurant')
@@ -28,4 +28,4 @@ const authRestaurant = {
   },
 };
 
-module.exports = authRestaurant;
+module.exports = authRestaurantService;

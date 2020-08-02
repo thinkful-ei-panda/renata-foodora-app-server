@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 
 const validation = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[\S]+/;
 
-const restValidation = {
+const restValidationService = {
 
   passValidation(password){
     if(password.length < 6) {
@@ -15,14 +15,14 @@ const restValidation = {
       return 'Password must not have empty spaces.';
     }
     if(!validation.test(password)){
-      return 'Password must have a uppercase, lowercase and a number.';
+      return 'Password must have at least an uppercase, a lowercase and a number.';
     }
     return null;
   },
 
   phoneValidation(phone){
     if(phone.length !== 10){
-      return 'Phone needs to be 10 digits.';
+      return 'Phone must be 10 digits.';
     }
     return null;
   },
@@ -47,4 +47,4 @@ const restValidation = {
   }
 };
 
-module.exports = restValidation;
+module.exports = restValidationService;

@@ -1,9 +1,10 @@
 const express = require('express');
 const xss = require('xss');
-const restValidation = require('./restaurant');
+const restValidationService = require('./restaurant');
 const path = require('path');
 const restRouter = express.Router();
 const jsonBodyParser = express.json();
+const logs = require('../logs');
 
 const serialRest = (rest) => ({
   id: rest.id,
@@ -25,34 +26,48 @@ restRouter
     };
 
     for (const field of ['username', 'password', 'name', 'phone'])
-      if (!trimRest[field])
-        return res.status(400).json({ error: `'${field}' is required` });
+      if (!trimRest[field]) {
+        logs.error(`Restaurant ${field} is required`);
+        return res
+          .status(400)
+          .json({ error: `The ${field} field is required.` });
+      }
+        
+    const passError = restValidationService.passValidation (trimRest.password);
+    if (passError) {
+      logs.error(passError);
+      return res
+        .status(400)
+        .json({ error: passError});
+    }
+    
+    const phoneError = restValidationService.phoneValidation(trimRest.phone);
+    if (phoneError) {
+      logs.error(phoneError);
+      return res
+        .status(400)
+        .json({ error: phoneError});
+    } 
 
-    const passError = restValidation.passValidation(trimRest.password);
-    if (passError) return res
-      .status(400)
-      .json({ error: passError });
-
-    const phoneError = restValidation.phoneValidation(trimRest.phone);
-    if (phoneError) return res
-      .status(400)
-      .json({ error: phoneError});
-
-    restValidation
+    restValidationService
       .checkRestLogin(req.app.get('db'), trimRest.username)
       .then((validRest) => {
-        if (validRest)
+        if (validRest){
+          logs.error('Restaurant username already exists.');
           return res
             .status(400)
             .json({ error: 'Username already exists. Try again.' });
+        }
+          
 
-        return restValidation.passHash(trimRest.password).then((hashedPass) => {
+        return restValidationService.passHash(trimRest.password).then((hashedPass) => {
 
           trimRest.password = hashedPass;
 
-          return restValidation
+          return restValidationService
             .addRest(req.app.get('db'), trimRest)
-            .then((rest) => {
+            .then(rest => {
+              logs.info(`Restaurant created successfully. The restaurant id is: ${rest.id}.`);
               res
                 .status(201)
                 .location(

@@ -5,6 +5,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
 const error = require('./error');
+
+// Routers
 const restRouter = require('./restaurant/restaurant-router');
 const authRouter = require('./auth-rest/auth-router');
 const restaurantDishRouter = require('./dish/dish-router');
@@ -23,8 +25,9 @@ app.use(
 app.use(helmet());
 app.use(cors());
 
+// Routers Call
 app.use(restRouter);
-app.use('/auth', authRouter);
+app.use(authRouter);
 app.use(restaurantDishRouter);
 
 app.use(error);

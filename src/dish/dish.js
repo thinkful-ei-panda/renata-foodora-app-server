@@ -1,7 +1,7 @@
+const { passHash } = require("../restaurant/restaurant");
+
 const restaurantDishService = {
   showAllDishes(db, id) {
-    //console.log('id=' + id);
-    //TODO
     return db
       .select(
         'd.id',
@@ -16,11 +16,6 @@ const restaurantDishService = {
       .leftJoin({r:'restaurant'}, 'd.restaurant_id', '=', 'r.id')
       .leftJoin({dht:'dish_has_tag'}, 'd.id', '=', 'dht.dish_id')
       .leftJoin({t:'tag'}, 'dht.tag_id', '=', 't.id')
-      // .join(
-      //   'dish_has_tag', 'dish.id', 'dish_has_tag.dish_id',
-      //   'restaurant','dish.restaurant_id','restaurant.id',
-      //   'tag', 'dish_has_tag.tag_id', 'tag.id'
-      // )
       //TODO DONT UNCOMMENT WHERE
 //      .where('d.restaurant_id', id)
       .then(results => {
@@ -32,13 +27,6 @@ const restaurantDishService = {
 
           result[unflatDish.id].tags.push(unflatDish.tag);
           return result;
-          //   one.dish_id = two.dish_id;
-          // }
-          // if(!one.tag_id){
-          //   one.tag_id = [];
-          // }
-          // one.tag_id.push(two.)
-          // return one;
         }, {});
       });
       //.orderBy(['dish.name', 'restaurant.name', 'tag.tag']);
@@ -58,12 +46,34 @@ const restaurantDishService = {
       .from('dish');
   },
 
+  priceValidation(price){
+    let parseResult = parseInt(price);
+    if(isNaN(parseResult)){
+      return 'Price must be integer.';
+    }
+    if(parseResult < 1){
+      return 'Price can not be smaller than 1.'
+    }
+    if(parseResult > 100){
+      return 'Price can not be bigger than 100.';
+    }
+    return null;
+  },
+
   getById(db, id) {
+    console.log('line 64 +  + = ' + id);
     return db
-      .select('*')
-      .from('dish')
-      .where('id', id)
-      .first();
+      .select(
+        'd.id',
+        'd.restaurant_id',
+        'd.name',
+        'd.price',
+        'r.name as restaurantname',
+        'r.phone'
+      )
+      .from({d:'dish'})
+      .leftJoin({r:'restaurant'}, 'd.restaurant_id', '=', 'r.id')
+      .where('d.id', id);
   },
 
   deleteDish(db, id) {
@@ -73,8 +83,6 @@ const restaurantDishService = {
   },
 
   updateDish(db, id, price) {
-    //console.log('THIS IS ID =' + JSON.stringify(id)); 
-    //console.log('THIS IS PRICE =' + JSON.stringify(price));
     return db('dish')
       .where('id', '=', id)
       .update({price: price});  

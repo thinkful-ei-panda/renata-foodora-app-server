@@ -32,3 +32,90 @@
 {"message":"Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query. Table: dish. Columns: 43.","level":"error"}
 {"message":"Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query. Table: dish. Columns: 43.","level":"error"}
 {"message":"The operator \"undefined\" is not permitted","level":"error"}
+{"message":"Dish created with 46 id.","level":"info"}
+{"message":"Password is invalid.","level":"error"}
+{"message":"Password must have a uppercase, lowercase and a number.","level":"error"}
+{"message":"Password must have a uppercase, lowercase and a number.","level":"error"}
+{"message":"Password must have a uppercase, lowercase and a number.","level":"error"}
+{"message":"Password must have at least an uppercase, a lowercase and a number.","level":"error"}
+{"message":"Phone is required.","level":"error"}
+{"message":"Phone needs to be 10 digits.","level":"error"}
+{"message":"Restaurant created with undefined id.","level":"info"}
+{"message":"Username already exists.","level":"error"}
+{"message":"'username' is required","level":"error"}
+{"message":"'Username' is required","level":"error"}
+{"message":"Username is not defined","level":"error"}
+{"message":"'Username' is required","level":"error"}
+{"message":"'Username' is required","level":"error"}
+{"message":"'Username' is required","level":"error"}
+{"message":"'Username' is required","level":"error"}
+{"message":"'Username' is required","level":"error"}
+{"message":"'password' is required","level":"error"}
+{"message":"'password' is required","level":"error"}
+{"message":"password is required","level":"error"}
+{"message":"password is required","level":"error"}
+{"message":"password is required","level":"error"}
+{"message":"username is required","level":"error"}
+{"message":"password is required","level":"error"}
+{"message":"name is required","level":"error"}
+{"message":"phone is required","level":"error"}
+{"message":"Password must have at least an uppercase, a lowercase and a number.","level":"error"}
+{"message":"Phone must be 10 digits.","level":"error"}
+{"message":"Restaurant created with undefined id.","level":"info"}
+{"message":"Username already exists.","level":"error"}
+{"message":"Restaurant created with 43 id.","level":"info"}
+{"message":"Restaurant created with id 44.","level":"info"}
+{"message":"Restaurant created successfully. The restaurant id is:  45.","level":"info"}
+{"message":"Restaurant created successfully. The restaurant id is:46.","level":"info"}
+{"message":"Restaurant created successfully. The restaurant id is: 47.","level":"info"}
+{"message":"Restaurant username already exists.","level":"error"}
+{"message":"Request for all dishes successful.","level":"info"}
+{"message":"Dish created successfully. The dish id is: 47.","level":"info"}
+{"message":"Unexpected token , in JSON at position 24","level":"error"}
+{"message":"Unexpected token } in JSON at position 60","level":"error"}
+{"message":"Unexpected token a in JSON at position 64","level":"error"}
+{"message":"Dish price is required","level":"error"}
+{"message":"Dish price is required","level":"error"}
+{"message":"Dish price is required","level":"error"}
+{"message":"Dish price is required","level":"error"}
+{"message":"Price must be a number.","level":"error"}
+{"message":"insert into \"dish\" (\"name\", \"price\", \"restaurant_id\") values ($1, $2, $3) returning * - invalid input syntax for type integer: \"{\"restaurant_id\":8,\"name\":\"Burger\",\"price\":\"2\"}\"","level":"error"}
+{"message":"req.body.price.replace is not a function","level":"error"}
+{"message":"insert into \"dish\" (\"name\", \"price\", \"restaurant_id\") values ($1, $2, $3) returning * - invalid input syntax for type integer: \"{\"restaurant_id\":8,\"name\":\"Burger\",\"price\":2}\"","level":"error"}
+{"message":"insert into \"dish\" (\"name\", \"price\", \"restaurant_id\") values ($1, $2, $3) returning * - invalid input syntax for type integer: \"{\"restaurant_id\":8,\"name\":\"Burger\",\"price\":2}\"","level":"error"}
+{"message":"insert into \"dish\" (\"name\", \"price\", \"restaurant_id\") values ($1, $2, $3) returning * - invalid input syntax for type integer: \"{\"restaurant_id\":8,\"name\":\"Burger\",\"price\":2}\"","level":"error"}
+{"message":"insert into \"dish\" (\"name\", \"price\", \"restaurant_id\") values ($1, $2, $3) returning * - invalid input syntax for type integer: \"{\"restaurant_id\":8,\"name\":\"Burger\",\"price\":2}\"","level":"error"}
+{"message":"insert into \"dish\" (\"name\", \"price\", \"restaurant_id\") values ($1, $2, $3) returning * - invalid input syntax for type integer: \"{\"restaurant_id\":8,\"name\":\"Burger\",\"price\":2}\"","level":"error"}
+{"message":"Dish with id 45 not found.","level":"error"}
+{"message":"Dish with id 27 not found.","level":"error"}
+{"message":"insert into \"dish\" (\"name\", \"price\", \"restaurant_id\") values ($1, $2, $3) returning * - invalid input syntax for type integer: \"{\"restaurant_id\":8,\"name\":\"Burger\",\"price\":2}\"","level":"error"}
+{"message":"Dish created successfully. The dish id is: 48.","level":"info"}
+{"message":"trimDish is not defined","level":"error"}
+{"message":"Price must be a number.","level":"error"}
+{"message":"Dish created successfully. The dish id is: 49.","level":"info"}
+{"message":"Dish created successfully. The dish id is: 50.","level":"info"}
+{"message":"Dish created successfully. The dish id is: 51.","level":"info"}
+{"message":"Price must be a number.","level":"error"}
+{"message":"Price must be a number.","level":"error"}
+{"message":"Price must be a number.","level":"error"}
+{"message":"Price must be a number.","level":"error"}
+{"message":"Dish created successfully. The dish id is: 52.","level":"info"}
+{"message":"Dish created successfully. The dish id is: 53.","level":"info"}
+{"message":"Price can not be bigger than 100","level":"error"}
+{"message":"Dish created successfully. The dish id is: 54.","level":"info"}
+{"message":"Price can not be smaller than 1","level":"error"}
+{"message":"Price can not be smaller than 1.","level":"error"}
+{"message":"Price can not be smaller than 1.","level":"error"}
+{"message":"Price can not be bigger than 100.","level":"error"}
+{"message":"Dish with id 45 not found.","level":"error"}
+{"message":"Request for all dishes successful.","level":"info"}
+{"message":"Request for all dishes successful.","level":"info"}
+{"message":"Request for all dishes successful.","level":"info"}
+{"message":"Dish with 54 id deleted.","level":"info"}
+{"message":"Dish with 53 id deleted.","level":"info"}
+{"message":"Dish with 55 id deleted.","level":"info"}
+{"message":"Dish with id 55 deleted.","level":"info"}
+{"message":"Dish with id undefined was updated successfully","level":"info"}
+{"message":"Dish with id 52 was updated successfully","level":"info"}
+{"message":"Dish [id 52] price was updated successfully","level":"info"}
+{"message":"Dish price [id 52] was updated successfully","level":"info"}
