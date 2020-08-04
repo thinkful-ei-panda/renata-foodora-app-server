@@ -1,6 +1,6 @@
 const authRestaurantService = require('../auth-rest/auth-rest');
 
-const requireAuth = function (req, res, next) {
+function requireAuth(req, res, next) {
   const token = req.get('Authorization') || '';
 
   let bearerToken;
@@ -27,13 +27,15 @@ const requireAuth = function (req, res, next) {
         req.rest = rest;
         next();
       })
-      .catch((err) => {
-        console.log(err);
-        next(err);
+      .catch((error) => {
+        console.log(error);
+        next(error);
       });
   } catch (error) {
     res.status(401).json({ error: 'Unauthorized request' });
   }
 };
 
-module.exports = requireAuth;
+module.exports = {
+  requireAuth, 
+};

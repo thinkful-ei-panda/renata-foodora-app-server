@@ -1,5 +1,3 @@
-const { passHash } = require("../restaurant/restaurant");
-
 const restaurantDishService = {
   showAllDishes(db, id) {
     return db
@@ -17,7 +15,7 @@ const restaurantDishService = {
       .leftJoin({dht:'dish_has_tag'}, 'd.id', '=', 'dht.dish_id')
       .leftJoin({t:'tag'}, 'dht.tag_id', '=', 't.id')
       //TODO DONT UNCOMMENT WHERE
-//      .where('d.restaurant_id', id)
+      //.where('d.restaurant_id', id)
       .then(results => {
         return results.reduce((result, unflatDish) => {
           result[unflatDish.id] = result[unflatDish.id] || {
@@ -30,7 +28,7 @@ const restaurantDishService = {
         }, {});
       });
       //.orderBy(['dish.name', 'restaurant.name', 'tag.tag']);
-  },
+},
 
   addDish(db, newDish) {
     return db
@@ -61,7 +59,6 @@ const restaurantDishService = {
   },
 
   getById(db, id) {
-    console.log('line 64 +  + = ' + id);
     return db
       .select(
         'd.id',

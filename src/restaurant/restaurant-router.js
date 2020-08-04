@@ -1,7 +1,7 @@
 const express = require('express');
 const xss = require('xss');
 const restValidationService = require('./restaurant');
-const { Authorization } = require('../middleware/jwt-auth');
+//const { requireAuth } = require('../middleware/jwt-auth');
 const path = require('path');
 const restRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -17,7 +17,7 @@ const serialRest = (rest) => ({
 
 restRouter
   .route('/register')
-  .all(Authorization)
+  //.all(requireAuth)
   .post(jsonBodyParser, (req, res, next) => {
    
     const trimRest = {
