@@ -42,6 +42,19 @@ const restValidationService = {
       .then(([rest]) => rest);
   },
 
+  deleteRestaurant(db, id){
+    return db('restaurant')
+      .where({ id })
+      .delete();
+  },
+
+  updateRestaurant(db, id, name, phone){
+    return db('restaurant')
+      .where('id', '=', id)
+      .update({name: name})
+      .update({phone: phone});
+  },
+
   passHash(password){
     return bcrypt.hash(password, 12);
   }

@@ -1,10 +1,9 @@
 const express = require('express');
 const xss = require('xss');
 const restaurantDishService = require('./dish');
-const requireAuth = require('../middleware/jwt-auth');
+//const requireAuth = require('../middleware/jwt-auth');
 const restaurantDishRouter = express.Router();
 const jsonBodyParser = express.json();
-const bodyParser = express.json();
 const logs = require('../logs');
 
 const serialDish = (dish) => ({
@@ -86,7 +85,7 @@ restaurantDishRouter
   .get((req, res) => {
     res.json(res.dish);
   })
-  .delete(bodyParser, (req, res, next) => {
+  .delete(jsonBodyParser, (req, res, next) => {
     const { id } = req.params;
 
     restaurantDishService
@@ -99,7 +98,7 @@ restaurantDishRouter
       })
       .catch(next);
   })
-  .patch(bodyParser, (req, res, next) => {
+  .patch(jsonBodyParser, (req, res, next) => {
     const id = req.params.id;
     const price = req.query.price;
 

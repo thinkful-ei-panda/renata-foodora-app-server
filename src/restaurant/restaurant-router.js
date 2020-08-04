@@ -87,4 +87,46 @@ restRouter
       .catch(next);
   });
 
+restRouter
+  .route('/restaurant/:id')
+  .delete(jsonBodyParser, (req, res, next) => {
+
+    const { id } = req.params;
+
+    restValidationService
+      .deleteRestaurant(req.app.get('db'), id)
+      .then(() => {
+        logs.info(`Restaurant with id ${id} deleted.`);
+        res.status(204).end();
+      })
+      .catch(next);
+  })
+  .patch(jsonBodyParser, (req, res, next) => {
+    const id = req.params.id;
+    const name = req.query.name;
+    const phone = req.query.phone;
+//TODO NEED TO GET BETTER VALIDATION ON PATCH
+    restValidationService.updateRestaurant(
+      req.app.get('db'),
+      id,
+      name,
+      phone
+    )
+      .then(() => {
+        if(name){
+          logs.info(`Restaurant name ${name} was updated successfully.`);
+          res
+            .status(204)
+            .end();
+        }
+        if(phone){
+          logs.info(`Restaurant phone ${phone} was updated successfully.`);
+          res
+            .status(204)
+            .end();
+        }
+      })
+      .catch(next);
+  });
+
 module.exports = restRouter;
