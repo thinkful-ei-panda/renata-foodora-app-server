@@ -18,6 +18,7 @@ const serialRest = (rest) => ({
 restRouter
   .route('/register')
   //.all(requireAuth)
+  //TODO If you want you auth later on!!!
   .post(jsonBodyParser, (req, res, next) => {
    
     const trimRest = {
