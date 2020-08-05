@@ -73,7 +73,7 @@ restRouter
                   .location(
                     path.posix.join(
                       'http://localhost:8080',
-                      //TODO'USE THE HEROKU LINK HERE'
+                      //TODO 'USE THE HEROKU LINK HERE'
                       `/restaurant/${rest.id}`
                     )
                   )

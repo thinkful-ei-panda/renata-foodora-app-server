@@ -15,7 +15,7 @@ const restaurantDishService = {
         .leftJoin({ r: "restaurant" }, "d.restaurant_id", "=", "r.id")
         .leftJoin({ dht: "dish_has_tag" }, "d.id", "=", "dht.dish_id")
         .leftJoin({ t: "tag" }, "dht.tag_id", "=", "t.id")
-        //TODO DONT UNCOMMENT WHERE
+        //TODO DO NOT UNCOMMENT WHERE
         //.where('d.restaurant_id', id)
         .then((results) => {
           return results.reduce((result, unflatDish) => {
