@@ -20,7 +20,6 @@ restRouter
   //.all(requireAuth)
   //TODO If you want you auth later on!!!
   .post(jsonBodyParser, (req, res, next) => {
-   
     const trimRest = {
       username: req.body.username.replace(/\s/g, ''),
       password: req.body.password,
@@ -35,54 +34,52 @@ restRouter
           .status(400)
           .json({ error: `The ${field} field is required.` });
       }
-        
-    const passError = restValidationService.passValidation (trimRest.password);
+
+    const passError = restValidationService.passValidation(trimRest.password);
     if (passError) {
       logs.error(passError);
-      return res
-        .status(400)
-        .json({ error: passError});
+      return res.status(400).json({ error: passError });
     }
-    
+
     const phoneError = restValidationService.phoneValidation(trimRest.phone);
     if (phoneError) {
       logs.error(phoneError);
-      return res
-        .status(400)
-        .json({ error: phoneError});
-    } 
+      return res.status(400).json({ error: phoneError });
+    }
 
     restValidationService
       .checkRestLogin(req.app.get('db'), trimRest.username)
       .then((validRest) => {
-        if (validRest){
+        if (validRest) {
           logs.error('Restaurant username already exists.');
           return res
             .status(400)
             .json({ error: 'Username already exists. Try again.' });
         }
-          
 
-        return restValidationService.passHash(trimRest.password).then((hashedPass) => {
+        return restValidationService
+          .passHash(trimRest.password)
+          .then((hashedPass) => {
+            trimRest.password = hashedPass;
 
-          trimRest.password = hashedPass;
-
-          return restValidationService
-            .addRest(req.app.get('db'), trimRest)
-            .then(rest => {
-              logs.info(`Restaurant created successfully. The restaurant id is: ${rest.id}.`);
-              res
-                .status(201)
-                .location(
-                  path.posix.join(
-                    'http://localhost:8080',
-                    //TODO'USE THE HEROKU LINK HERE'
-                    `/restaurant/${rest.id}`
+            return restValidationService
+              .addRest(req.app.get('db'), trimRest)
+              .then((rest) => {
+                logs.info(
+                  `Restaurant created successfully. The restaurant id is: ${rest.id}.`
+                );
+                res
+                  .status(201)
+                  .location(
+                    path.posix.join(
+                      'http://localhost:8080',
+                      //TODO'USE THE HEROKU LINK HERE'
+                      `/restaurant/${rest.id}`
+                    )
                   )
-                )
-                .json(serialRest(rest));
-            });
-        });
+                  .json(serialRest(rest));
+              });
+          });
       })
       .catch(next);
   });
@@ -90,7 +87,6 @@ restRouter
 restRouter
   .route('/restaurant/:id')
   .delete(jsonBodyParser, (req, res, next) => {
-
     const { id } = req.params;
 
     restValidationService
@@ -105,25 +101,17 @@ restRouter
     const id = req.params.id;
     const name = req.query.name;
     const phone = req.query.phone;
-//TODO NEED TO GET BETTER VALIDATION ON PATCH
-    restValidationService.updateRestaurant(
-      req.app.get('db'),
-      id,
-      name,
-      phone
-    )
+    //TODO NEED TO GET BETTER VALIDATION ON PATCH
+    restValidationService
+      .updateRestaurant(req.app.get('db'), id, name, phone)
       .then(() => {
-        if(name){
+        if (name) {
           logs.info(`Restaurant name ${name} was updated successfully.`);
-          res
-            .status(204)
-            .end();
+          res.status(204).end();
         }
-        if(phone){
+        if (phone) {
           logs.info(`Restaurant phone ${phone} was updated successfully.`);
-          res
-            .status(204)
-            .end();
+          res.status(204).end();
         }
       })
       .catch(next);

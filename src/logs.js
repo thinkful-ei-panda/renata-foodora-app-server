@@ -4,15 +4,15 @@ const { NODE_ENV } = require('./config');
 const logs = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
-  transports: [
-    new winston.transports.File({ filename: 'info.log' })
-  ]
+  transports: [new winston.transports.File({ filename: 'info.log' })],
 });
 
 if (NODE_ENV !== 'production') {
-  logs.add(new winston.transports.Console({
-    format: winston.format.simple()
-  }));
+  logs.add(
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    })
+  );
 }
 
 module.exports = logs;

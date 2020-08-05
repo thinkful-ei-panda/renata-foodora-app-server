@@ -19,48 +19,40 @@ restaurantDishRouter
   .route('/dish')
   .get((req, res, next) => {
     const db = req.app.get('db');
-    restaurantDishService.getAllDishes(db)
-      .then(dish => {
+    restaurantDishService
+      .getAllDishes(db)
+      .then((dish) => {
         logs.info('Request for all dishes successful.');
-        res
-          .status(201)
-          .json(dish.map(serialDish));
+        res.status(201).json(dish.map(serialDish));
       })
       .catch(next);
   })
   .post(jsonBodyParser, (req, res, next) => {
+    const newDish = {
+      restaurant_id: req.body.restaurant_id,
+      name: req.body.name.trim(),
+      price: req.body.price,
+    };
 
-    const newDish = { 
-      restaurant_id: req.body.restaurant_id, 
-      name: req.body.name.trim(), 
-      price: req.body.price
-    }; 
-    
-    for(const field of ['name', 'price'])
-      if (!newDish[field]){
+    for (const field of ['name', 'price'])
+      if (!newDish[field]) {
         logs.error(`Dish ${field} is required`);
         return res
           .status(400)
-          .json({ error: `The ${field} field is required` 
-          });
+          .json({ error: `The ${field} field is required` });
       }
 
     const priceError = restaurantDishService.priceValidation(newDish.price);
-    if(priceError){
+    if (priceError) {
       logs.error(priceError);
-      return res
-        .status(400)
-        .json({ error: priceError});
+      return res.status(400).json({ error: priceError });
     }
 
     restaurantDishService
       .addDish(req.app.get('db'), newDish)
-      .then(dish => {
+      .then((dish) => {
         logs.info(`Dish created successfully. The dish id is: ${dish.id}.`);
-        res
-          .status(201)
-          .location(`/dish/${dish.id}`)
-          .json(serialDish(dish));
+        res.status(201).location(`/dish/${dish.id}`).json(serialDish(dish));
       })
       .catch(next);
   });
@@ -69,13 +61,12 @@ restaurantDishRouter
   .route('/dish/:id')
   .all((req, res, next) => {
     const { id } = req.params;
-    restaurantDishService.getById(req.app.get('db'), id)
-      .then(dish => {
-        if(!dish){
+    restaurantDishService
+      .getById(req.app.get('db'), id)
+      .then((dish) => {
+        if (!dish) {
           logs.error(`Dish with id ${id} not found.`);
-          return res
-            .status(404)
-            .json({error: 'Dish not found.'});
+          return res.status(404).json({ error: 'Dish not found.' });
         }
         res.dish = dish;
         next();
@@ -92,9 +83,7 @@ restaurantDishRouter
       .deleteDish(req.app.get('db'), id)
       .then(() => {
         logs.info(`Dish with id ${id} deleted.`);
-        res
-          .status(204)
-          .end();
+        res.status(204).end();
       })
       .catch(next);
   })
@@ -102,16 +91,11 @@ restaurantDishRouter
     const id = req.params.id;
     const price = req.query.price;
 
-    restaurantDishService.updateDish(
-      req.app.get('db'),
-      id,
-      price
-    )
+    restaurantDishService
+      .updateDish(req.app.get('db'), id, price)
       .then(() => {
         logs.info(`Dish price [id ${id}] was updated successfully`);
-        res
-          .status(204)
-          .end();
+        res.status(204).end();
       })
       .catch(next);
   });
@@ -121,17 +105,13 @@ restaurantDishRouter
   //TODO REMEMBER TO DELETE TAG FROM THE RESULTS HERE
   .get((req, res, next) => {
     const restaurant_id = req.query.restaurant_id;
-    restaurantDishService.showAllDishes(
-      req.app.get('db'), 
-      restaurant_id
-    )
-      .then(dishes => {
+    restaurantDishService
+      .showAllDishes(req.app.get('db'), restaurant_id)
+      .then((dishes) => {
         logs.info('Request for search results successful.');
-        if(!dishes){
+        if (!dishes) {
           logs.error(`Search result with id ${dishes.id} not found.`);
-          return res
-            .status(404)
-            .json({error: 'Dish not found.'});
+          return res.status(404).json({ error: 'Dish not found.' });
         }
         res.json(dishes);
         next();

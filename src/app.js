@@ -13,9 +13,7 @@ const restaurantDishRouter = require('./dish/dish-router');
 
 const app = express();
 
-const morganOption = (NODE_ENV === 'production')
-  ? 'tiny'
-  : 'common';
+const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
 app.use(
   morgan(morganOption, {
