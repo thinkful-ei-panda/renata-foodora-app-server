@@ -43,10 +43,11 @@ authRouter
 
 
             const subject = dbRest.username;
-            const payload = { restaurant_id: dbRest.restaurant_id };
+            const payload = { restaurant_id: dbRest.id };
             res.send({
               authToken: authRestaurantService.createRestJWT(subject, payload),
               restaurant_id: payload.restaurant_id,
+              name: dbRest.name,
             });
           });
       })
