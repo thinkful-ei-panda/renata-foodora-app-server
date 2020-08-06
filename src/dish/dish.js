@@ -1,5 +1,5 @@
 const restaurantDishService = {
-  showAllDishes(db, id) {
+  showResult(db, id) {
     return (
       db
         .select(

@@ -106,7 +106,7 @@ restaurantDishRouter
   .get((req, res, next) => {
     const restaurant_id = req.query.restaurant_id;
     restaurantDishService
-      .showAllDishes(req.app.get('db'), restaurant_id)
+      .showResult(req.app.get('db'), restaurant_id)
       .then((dishes) => {
         logs.info('Request for search results successful.');
         if (!dishes) {
