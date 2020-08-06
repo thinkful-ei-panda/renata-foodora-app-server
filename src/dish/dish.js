@@ -41,7 +41,9 @@ const restaurantDishService = {
   },
 
   getAllDishes(db) {
-    return db.select("*").from("dish");
+    return db
+    .select("*")
+    .from("dish");
   },
 
   priceValidation(price) {
@@ -80,6 +82,14 @@ const restaurantDishService = {
   updateDish(db, id, price) {
     return db("dish").where("id", "=", id).update({ price: price });
   },
+
+  getAllTags(db){
+    return db
+    .select('*')
+    .from('tag')
+    .orderBy(['tag.tag']);
+  },
+  
 };
 
 module.exports = restaurantDishService;

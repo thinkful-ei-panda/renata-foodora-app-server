@@ -119,4 +119,17 @@ restaurantDishRouter
       .catch(next);
   });
 
+restaurantDishRouter
+  .route('/tag')
+  .all((req, res, next) => {
+    const db = req.app.get('db');
+    restaurantDishService
+      .getAllTags(db)
+      .then((tag) => {
+        logs.info('Request all tags successful.');
+        res.status(201).json(tag);
+      })
+      .catch(next);
+  });
+
 module.exports = restaurantDishRouter;
