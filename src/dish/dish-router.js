@@ -1,7 +1,6 @@
 const express = require('express');
 const xss = require('xss');
 const restaurantDishService = require('./dish');
-//const requireAuth = require('../middleware/jwt-auth');
 const restaurantDishRouter = express.Router();
 const jsonBodyParser = express.json();
 const logs = require('../logs');
@@ -14,7 +13,6 @@ const serialDish = (dish) => ({
   restname: xss(dish.restaurantname),
   restaurant_id: xss(dish.restaurant_id),
 });
-//TODO WHAt IS RESTNAME AND PHONE?????
 
 restaurantDishRouter
   .route('/dish')
