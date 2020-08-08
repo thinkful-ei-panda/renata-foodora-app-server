@@ -14,6 +14,7 @@ const serialDish = (dish) => ({
   restname: xss(dish.restaurantname),
   restaurant_id: xss(dish.restaurant_id),
 });
+//TODO WHAt IS RESTNAME AND PHONE?????
 
 restaurantDishRouter
   .route('/dish')
@@ -32,6 +33,7 @@ restaurantDishRouter
       restaurant_id: req.body.restaurant_id,
       name: req.body.name.trim(),
       price: req.body.price,
+      //tag_id: req.body.tag_id,
     };
 
     for (const field of ['name', 'price'])
@@ -48,10 +50,26 @@ restaurantDishRouter
       return res.status(400).json({ error: priceError });
     }
 
+    const tagError = restaurantDishService.tagValidation(req.body.tag_id);
+    if (tagError) {
+      logs.error(tagError);
+      return res.status(400).json({ error: tagError });
+    }
+
     restaurantDishService
       .addDish(req.app.get('db'), newDish)
       .then((dish) => {
         logs.info(`Dish created successfully. The dish id is: ${dish.id}.`);
+
+        req.body.tag_id.forEach((e) => {
+          restaurantDishService
+            .addTag(req.app.get('db'), dish.id, e)
+            .then(() => {
+              logs.info('Tag was attached correctly');
+              res.status(201).json({ error: 'Tag not found.' });
+            })
+            .catch(next);
+        });
         res.status(201).location(`/dish/${dish.id}`).json(serialDish(dish));
       })
       .catch(next);
@@ -102,7 +120,7 @@ restaurantDishRouter
 
 restaurantDishRouter
   .route('/dishSearchResults')
-  //TODO REMEMBER TO DELETE TAG FROM THE RESULTS HERE
+//TODO REMEMBER TO DELETE TAG FROM THE RESULTS HERE
   .get((req, res, next) => {
     const restaurant_id = req.query.restaurant_id;
     restaurantDishService
@@ -119,17 +137,15 @@ restaurantDishRouter
       .catch(next);
   });
 
-restaurantDishRouter
-  .route('/tag')
-  .all((req, res, next) => {
-    const db = req.app.get('db');
-    restaurantDishService
-      .getAllTags(db)
-      .then((tag) => {
-        logs.info('Request all tags successful.');
-        res.status(201).json(tag);
-      })
-      .catch(next);
-  });
+restaurantDishRouter.route('/tag').all((req, res, next) => {
+  const db = req.app.get('db');
+  restaurantDishService
+    .getAllTags(db)
+    .then((tag) => {
+      logs.info('Request all tags successful.');
+      res.status(201).json(tag);
+    })
+    .catch(next);
+});
 
 module.exports = restaurantDishRouter;

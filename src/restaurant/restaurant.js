@@ -42,7 +42,9 @@ const restValidationService = {
   },
 
   deleteRestaurant(db, id) {
-    return db('restaurant').where({ id }).delete();
+    return db('restaurant')
+      .where({ id })
+      .delete();
   },
 
   updateRestaurant(db, id, name, phone) {

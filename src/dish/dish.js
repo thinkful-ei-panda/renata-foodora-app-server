@@ -40,6 +40,29 @@ const restaurantDishService = {
       .then(([dish]) => dish);
   },
 
+  addTag(db, dish_id, tag_id){
+    const newDishHasTag = {
+      dish_id: dish_id,
+      tag_id: tag_id
+    };
+    console.log("addTag -> newDishHasTag", JSON.stringify(newDishHasTag));
+    return db
+    .insert(newDishHasTag)
+    .into("dish_has_tag")
+    .returning('*')
+    .then(([tag]) => tag);
+  },
+
+  tagValidation(tag){
+    if(tag.length < 1){
+      return 'At least one tag needs to be selected.';
+    }
+    if(tag.length > 5){
+      return 'Only five tags can be selected.';
+    }
+    return null;
+  },
+
   getAllDishes(db) {
     return db
     .select("*")
