@@ -18,7 +18,7 @@
   "engines": {
     "node": "12.16.3"
   },
-  "author": "",
+  "author": "Renata D.",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

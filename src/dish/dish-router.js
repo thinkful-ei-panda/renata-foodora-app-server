@@ -22,7 +22,10 @@ restaurantDishRouter
       .getAllDishes(db)
       .then((dish) => {
         logs.info('Request for all dishes successful.');
-        res.status(201).json(dish.map(serialDish));
+        res.status(201)
+          .json(dish
+            .map(serialDish)
+          );
       })
       .catch(next);
   })
@@ -31,7 +34,7 @@ restaurantDishRouter
       restaurant_id: req.body.restaurant_id,
       name: req.body.name.trim(),
       price: req.body.price,
-      //tag_id: req.body.tag_id,
+      tag_id: req.body.tag_id,
     };
 
     for (const field of ['name', 'price'])
@@ -45,13 +48,17 @@ restaurantDishRouter
     const priceError = restaurantDishService.priceValidation(newDish.price);
     if (priceError) {
       logs.error(priceError);
-      return res.status(400).json({ error: priceError });
+      return res
+        .status(400)
+        .json({ error: priceError });
     }
 
     const tagError = restaurantDishService.tagValidation(req.body.tag_id);
     if (tagError) {
       logs.error(tagError);
-      return res.status(400).json({ error: tagError });
+      return res
+        .status(400)
+        .json({ error: tagError });
     }
 
     restaurantDishService
@@ -63,12 +70,14 @@ restaurantDishRouter
           restaurantDishService
             .addTag(req.app.get('db'), dish.id, e)
             .then(() => {
-              logs.info('Tag was attached correctly');
+              logs.info('Tags were attached correctly');
               res.status(201).json({ error: 'Tag not found.' });
             })
             .catch(next);
         });
-        res.status(201).location(`/dish/${dish.id}`).json(serialDish(dish));
+        res.status(201)
+          .location(`/dish/${dish.id}`)
+          .json(serialDish(dish));
       })
       .catch(next);
   });
@@ -120,14 +129,26 @@ restaurantDishRouter
   .route('/dishSearchResults')
 //TODO REMEMBER TO DELETE TAG FROM THE RESULTS HERE
   .get((req, res, next) => {
-    const restaurant_id = req.query.restaurant_id;
+
+    const SearchParams = {
+      tag: req.query.tag,
+      price: req.query.price,
+      name: req.query.name,
+    };
+        
+    const priceSearchError = restaurantDishService.searchPriceValidation(SearchParams.price);
+    if(priceSearchError){
+      logs.error(priceSearchError);
+      return res.status(400).json({ error: priceSearchError });
+    }
+    
     restaurantDishService
-      .showResult(req.app.get('db'), restaurant_id)
+      .showResult(req.app.get('db'), SearchParams.tag, restaurantDishService.convertPriceToRange(SearchParams.price), SearchParams.name)
       .then((dishes) => {
         logs.info('Request for search results successful.');
         if (!dishes) {
-          logs.error(`Search result with id ${dishes.id} not found.`);
-          return res.status(404).json({ error: 'Dish not found.' });
+          logs.error('Search result not found.');
+          return res.status(404).json({ error: 'Result not found.' });
         }
         res.json(dishes);
         next();
@@ -135,15 +156,41 @@ restaurantDishRouter
       .catch(next);
   });
 
-restaurantDishRouter.route('/tag').all((req, res, next) => {
-  const db = req.app.get('db');
-  restaurantDishService
-    .getAllTags(db)
-    .then((tag) => {
-      logs.info('Request all tags successful.');
-      res.status(201).json(tag);
-    })
-    .catch(next);
-});
+restaurantDishRouter.route('/tag')
+  .all((req, res, next) => {
+    const db = req.app.get('db');
+    restaurantDishService
+      .getAllTags(db)
+      .then((tag) => {
+        logs.info('Request all tags successful.');
+        res.status(201).json(tag);
+      })
+      .catch(next);
+  });
+
+// restaurantDishRouter.route('/price')
+//   .all((req, res, next) => {
+//     const db = req.app.get('db');
+//     restaurantDishService
+//       .getPrice(db)
+//       .then((price) => {
+//         logs.info('Request all prices successful.');
+//         res.status(201).json(price);
+//       })
+//       .catch(next);
+//   });
+
+// restaurantDishRouter.route('/test')
+//   .all((req, res, next) => {
+//     const db = req.app.get('db');
+//     restaurantDishService
+//       .dishResultsModified(db)
+//       .then((test) => {
+//         logs.info('Request all TESTS successful.');
+//         res.status(201).json(test);
+//       })
+//       .catch(next);
+//   });
+
 
 module.exports = restaurantDishRouter;
