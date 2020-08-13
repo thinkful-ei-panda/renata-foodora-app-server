@@ -130,11 +130,21 @@ restaurantDishRouter
 //TODO REMEMBER TO DELETE TAG FROM THE RESULTS HERE
   .get((req, res, next) => {
 
+    // note - expecting req.query.tag to be string like '2,3,5' or '15' or ''
+    // we want to convert the (submitted) string into an array
+    // let tagCriterion = req.query.tag;
+    // if (tagCriterion === undefined || tagCriterion === null || tagCriterion.length === 0) {
+    //   tagCriterion = [];
+    // } else {
+    //   tagCriterion = tagCriterion.split(',');
+    // }
+
     const SearchParams = {
-      tag: req.query.tag,
+      tag: req.query.tag, //tagCriterion
       price: req.query.price,
       name: req.query.name,
     };
+    //console.log("SearchParams", JSON.stringify(SearchParams));
         
     const priceSearchError = restaurantDishService.searchPriceValidation(SearchParams.price);
     if(priceSearchError){

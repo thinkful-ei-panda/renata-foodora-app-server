@@ -2,30 +2,74 @@ const knex = require('knex');
 
 const restaurantDishService = {
   showResult(db, tag, priceRange, name) { 
-    console.log("showResult -> priceRange", priceRange);
+    //tag='[17]';
+    console.log('dish.js.restaurantDishService.showResult() tag=', tag + ', isArray?=' + Array.isArray(tag));
+    //console.log('showResult -> priceRange', priceRange);
+
+    //Array.isArray(tag);
+    //console.log("ARRAY IS ARRAY !!!! showResult -> Array.isArray(tag)", Array.isArray(tag));
+
+    // prepare the LIKE parameter
+    const likeName = (name === undefined || name === null) ? '%' : '%' + name + '%';
+    // prepare the TAG parameter (the SQL hates comparing empty array)
+    let queryTagFragment = '';
+    if (tag !== undefined && tag !== null && tag.length > 0) {
+      queryTagFragment = ` having ARRAY[${tag.toString()}]::integer[] <@ ARRAY_REMOVE(ARRAY_AGG(t.id), null)`;
+    }
+
+    //console.log("QUERRY FRAGMENT TAG showResult -> queryTagFragment", queryTagFragment)
+
     return (
       db
-        .select(
-          'd.id',
-          'd.name',
-          'd.restaurant_id',
-          'd.price',
-          'r.name as restaurantname',
-          'r.phone',
-          //knex.raw('ARRAY_AGG(t.id) as tag_ids'),
-          knex.raw('ARRAY_AGG(t.tag) as tag_names')
+        .raw(
+          'select ' +
+            'd.id' +
+            ', d.name' +
+            ', d.restaurant_id' +
+            ', d.price' +
+            ', r.name as restaurantname' +
+            ', r.phone' +
+            ', ARRAY_REMOVE(ARRAY_AGG(t.id), null) as tag_ids' +
+            ', ARRAY_REMOVE(ARRAY_AGG(t.tag), null) as tag_names' +
+          ' from dish d' +
+          ' left join dish_has_tag dht on d.id=dht.dish_id' +
+          ' left join tag t on dht.tag_id=t.id' +
+          ' left join restaurant r on d.restaurant_id=r.id' +
+          ' where d.price >= ?' +
+          ' and d.price <= ?' +
+          ' and upper(d.name) LIKE upper(\'' + likeName + '\')' +
+          ' group by d.id, d.name, r.name, r.phone' +
+          queryTagFragment +
+          ' order by d.name asc'
+          , [priceRange.fromPrice, priceRange.toPrice]
         )
-        .from({ dht: 'dish_has_tag' })
-        .leftJoin({ t: 'tag' }, 'dht.tag_id', '=', 't.id')
-        .leftJoin({ d: 'dish' }, 'd.id', '=', 'dht.dish_id')
-        .leftJoin({ r: 'restaurant' }, 'd.restaurant_id', '=', 'r.id')
-        .where('d.price', '>=', priceRange.fromPrice)
-        .where('d.price', '<=', priceRange.toPrice)
-        .groupBy('d.id', 'd.name', 'r.name', 'r.phone')
-        //.groupBy('d.id', 'd.name')
-        .orderBy('d.name')
-        .then((dishes) => dishes)
+        //.then((dishes) => dishes)
+        .then((dishes) => dishes.rows)
     );
+
+    // return (
+    //   db
+    //     .select(
+    //       'd.id',
+    //       'd.name',
+    //       'd.restaurant_id',
+    //       'd.price',
+    //       'r.name as restaurantname',
+    //       'r.phone',
+    //       //knex.raw('ARRAY_AGG(t.id) as tag_ids'),
+    //       knex.raw('ARRAY_AGG(t.tag) as tag_names')
+    //     )
+    //     .from({ dht: 'dish_has_tag' })
+    //     .leftJoin({ t: 'tag' }, 'dht.tag_id', '=', 't.id')
+    //     .leftJoin({ d: 'dish' }, 'd.id', '=', 'dht.dish_id')
+    //     .leftJoin({ r: 'restaurant' }, 'd.restaurant_id', '=', 'r.id')
+    //     .where('d.price', '>=', priceRange.fromPrice)
+    //     .where('d.price', '<=', priceRange.toPrice)
+    //     .groupBy('d.id', 'd.name', 'r.name', 'r.phone')
+    //     //.groupBy('d.id', 'd.name')
+    //     .orderBy('d.name')
+    //     .then((dishes) => dishes)
+    // );
 
     //.orderBy(['dish.name', 'restaurant.name', 'tag.tag']);
   },
@@ -112,24 +156,14 @@ const restaurantDishService = {
       .orderBy(['tag.tag']);
   },
 
-  // getPrice(db){
-  //   return db
-  //   .select('price')
-  //   .from('dish')
-  //   .orderBy(['dish.price']);
-  // },
-
   searchPriceValidation(price){
     let parseResult = parseInt(price);
     //TODO NEED TO STOP WHEN PRICE= 
-    if(price == null){
+    if(price == null || price == ''){
       return null;
     }
-    if(price > 5){
+    if(price > 5 || price < 0){
       return 'Invalid price.';
-    }
-    if(price < 1){
-      return 'Invalid price';
     }
     if (isNaN(parseResult)) {
       return 'Price must be integer.';
