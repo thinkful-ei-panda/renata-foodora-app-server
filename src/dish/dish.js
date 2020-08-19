@@ -142,11 +142,15 @@ const restaurantDishService = {
   },
 
   deleteDish(db, id) {
-    return db('dish').where({ id }).delete();
+    return db('dish')
+      .where({ id })
+      .delete();
   },
 
   updateDish(db, id, price) {
-    return db('dish').where('id', '=', id).update({ price: price });
+    return db('dish')
+      .where('id', '=', id)
+      .update({ price: price });
   },
 
   getAllTags(db){

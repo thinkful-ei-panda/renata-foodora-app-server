@@ -69,7 +69,7 @@ restRouter
                   `Restaurant created successfully. The restaurant id is: ${rest.id}.`
                 );
                 res
-                  .status(201)
+                  .status(200)
                   .location(
                     path.posix.join(
                       'http://localhost:8080',

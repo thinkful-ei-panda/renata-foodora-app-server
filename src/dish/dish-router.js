@@ -22,7 +22,7 @@ restaurantDishRouter
       .getAllDishes(db)
       .then((dish) => {
         logs.info('Request for all dishes successful.');
-        res.status(201)
+        res.status(200)
           .json(dish
             .map(serialDish)
           );
@@ -71,7 +71,8 @@ restaurantDishRouter
             .addTag(req.app.get('db'), dish.id, e)
             .then(() => {
               logs.info('Tags were attached correctly');
-              res.status(201).json({ error: 'Tag not found.' });
+              res.status(201)
+                .json({ error: 'Tag not found.' });
             })
             .catch(next);
         });
@@ -173,7 +174,7 @@ restaurantDishRouter.route('/tag')
       .getAllTags(db)
       .then((tag) => {
         logs.info('Request all tags successful.');
-        res.status(201).json(tag);
+        res.status(200).json(tag);
       })
       .catch(next);
   });
