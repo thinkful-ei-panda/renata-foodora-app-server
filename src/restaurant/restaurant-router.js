@@ -32,19 +32,23 @@ restRouter
         logs.error(`Restaurant ${field} is required`);
         return res
           .status(400)
-          .json({ error: `The ${field} field is required.` });
+          .json({ error: `The ${field} is required.` });
       }
 
     const passError = restValidationService.passValidation(trimRest.password);
     if (passError) {
       logs.error(passError);
-      return res.status(400).json({ error: passError });
+      return res
+        .status(400)
+        .json({ error: passError });
     }
 
     const phoneError = restValidationService.phoneValidation(trimRest.phone);
     if (phoneError) {
       logs.error(phoneError);
-      return res.status(400).json({ error: phoneError });
+      return res
+        .status(400)
+        .json({ error: phoneError });
     }
 
     restValidationService
@@ -113,6 +117,34 @@ restRouter
           logs.info(`Restaurant phone ${phone} was updated successfully.`);
           res.status(204).end();
         }
+      })
+      .catch(next);
+  });
+
+restRouter
+  .route('/restaurant-dish-list/:id')
+  .get((req, res, next) => {
+    const { id } = req.params;
+
+    restValidationService
+      .showRestaurantDishesByID(req.app.get('db'), id)
+      .then((restID) => {
+        logs.info(`Returned all dishes from Restaurant ${id} successful.`);
+        res
+          .status(200)
+          .json(restID);
+      })
+      .catch(next);
+  })
+  .delete(jsonBodyParser, (req, res, next) => {
+    const dish_id = req.query.dish_id;
+    const restaurant_id = req.params.id;
+
+    restValidationService
+      .deleteRestaurantDishes(req.app.get('db'), dish_id, restaurant_id)
+      .then(() => {
+        logs.info(`Dish id ${dish_id} from Restaurant id ${restaurant_id} deleted.`);
+        res.status(204).end();
       })
       .catch(next);
   });

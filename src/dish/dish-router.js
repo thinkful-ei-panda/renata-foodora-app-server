@@ -22,7 +22,8 @@ restaurantDishRouter
       .getAllDishes(db)
       .then((dish) => {
         logs.info('Request for all dishes successful.');
-        res.status(200)
+        res
+          .status(200)
           .json(dish
             .map(serialDish)
           );
@@ -39,10 +40,10 @@ restaurantDishRouter
 
     for (const field of ['name', 'price'])
       if (!newDish[field]) {
-        logs.error(`Dish ${field} is required`);
+        logs.error(`Dish ${field} is required.`);
         return res
           .status(400)
-          .json({ error: `The ${field} field is required` });
+          .json({ error: `The ${field} field is required.` });
       }
 
     const priceError = restaurantDishService.priceValidation(newDish.price);
@@ -70,9 +71,7 @@ restaurantDishRouter
           restaurantDishService
             .addTag(req.app.get('db'), dish.id, e)
             .then(() => {
-              logs.info('Tags were attached correctly');
-              res.status(201)
-                .json({ error: 'Tag not found.' });
+              logs.info('Tags were attached correctly.');
             })
             .catch(next);
         });
@@ -120,7 +119,7 @@ restaurantDishRouter
     restaurantDishService
       .updateDish(req.app.get('db'), id, price)
       .then(() => {
-        logs.info(`Dish price [id ${id}] was updated successfully`);
+        logs.info(`Dish price [id ${id}] was updated successfully.`);
         res.status(204).end();
       })
       .catch(next);

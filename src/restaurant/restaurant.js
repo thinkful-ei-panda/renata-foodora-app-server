@@ -57,6 +57,33 @@ const restValidationService = {
   passHash(password) {
     return bcrypt.hash(password, 12);
   },
+
+  showRestaurantDishesByID(db, restaurantID){
+    return(
+      db.raw(
+        'select ' +
+        'd.id' +
+        ', d.name' +
+        ', d.price' +
+        ', ARRAY_REMOVE(ARRAY_AGG(t.tag), null) as tag_names' +
+        ' from dish d' +
+        ' left join dish_has_tag dht on d.id=dht.dish_id' +
+        ' left join tag t on dht.tag_id=t.id' +
+        ' where d.restaurant_id =' + restaurantID +
+        ' group by d.id, d.name, d.price' 
+      )
+        .then((dishes) => dishes.rows)
+    );
+  },
+
+  deleteRestaurantDishes(db, id, restaurant_id) {
+    return db
+      .from({ d: 'dish'})
+      .where('d.id', id)
+      .where('d.restaurant_id', restaurant_id)
+      .delete();
+  },
+
 };
 
 module.exports = restValidationService;

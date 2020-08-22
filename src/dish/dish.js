@@ -77,7 +77,12 @@ const restaurantDishService = {
   addDish(db, newDish) {
     console.log("addDish -> newDish", newDish);
     return db
-      .insert(newDish)
+      //.insert(newDish)
+      .insert({ 
+        restaurant_id: newDish.restaurant_id,
+        name: newDish.name,
+        price: newDish.price
+      })
       .into('dish')
       .returning('*')
       .then(([dish]) => dish);
@@ -101,7 +106,7 @@ const restaurantDishService = {
       return 'At least one tag needs to be selected.';
     }
     if(tag.length > 5){
-      return 'Only five tags can be selected.';
+      return 'Only up to five tags can be selected.';
     }
     return null;
   },
@@ -190,7 +195,7 @@ const restaurantDishService = {
     }
     else if (price == 3){
       fromPrice = 41;
-      toPrice =60;
+      toPrice = 60;
     }
     else if (price == 4){
       fromPrice = 61;
