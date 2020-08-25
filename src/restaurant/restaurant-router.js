@@ -23,7 +23,7 @@ restRouter
     const trimRest = {
       username: req.body.username.replace(/\s/g, ''),
       password: req.body.password,
-      name: req.body.name.trim(),
+      name: req.body.name.trim().replace(/\s+/g, ''),
       phone: req.body.phone.replace(/\D/g, ''),
     };
 
@@ -102,23 +102,39 @@ restRouter
       .catch(next);
   })
   .patch(jsonBodyParser, (req, res, next) => {
-    const id = req.params.id;
-    const name = req.query.name;
-    const phone = req.query.phone;
+    
+    console.log("req.body", JSON.stringify(req.body))
+    const trimUpdateRest = {
+      id: req.params.id,
+      name: req.body.name.trim().replace(/\s+/g, ' '),
+      phone: req.body.phone.replace(/\D/g, ''),
+    };
+    
+    console.log("trimUpdateRest", trimUpdateRest)
+
     //TODO NEED TO GET BETTER VALIDATION ON PATCH
+
+    const phoneError = restValidationService.phoneValidation(trimUpdateRest.phone);
+    if (phoneError) {
+      logs.error(phoneError);
+      return res
+        .status(400)
+        .json({ error: phoneError });
+    }
+
     restValidationService
-      .updateRestaurant(req.app.get('db'), id, name, phone)
+      .updateRestaurant(req.app.get('db'), trimUpdateRest.id, trimUpdateRest.name, trimUpdateRest.phone)
       .then(() => {
-        if (name) {
-          logs.info(`Restaurant name ${name} was updated successfully.`);
+        if (trimUpdateRest.name) {
+          logs.info(`Restaurant name ${trimUpdateRest.name} was updated successfully.`);
           res.status(204).end();
         }
-        if (phone) {
-          logs.info(`Restaurant phone ${phone} was updated successfully.`);
+        if (trimUpdateRest.phone) {
+          logs.info(`Restaurant phone ${trimUpdateRest.phone} was updated successfully.`);
           res.status(204).end();
         }
       })
-      .catch(next);
+      //.catch(next);
   });
 
 restRouter
@@ -129,7 +145,7 @@ restRouter
     restValidationService
       .showRestaurantDishesByID(req.app.get('db'), id)
       .then((restID) => {
-        logs.info(`Returned all dishes from Restaurant ${id} successful.`);
+        logs.info(`Returned all dishes from Restaurant ${id} successfully.`);
         res
           .status(200)
           .json(restID);

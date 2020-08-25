@@ -110,6 +110,7 @@ const restaurantDishService = {
     }
     return null;
   },
+  //TODO TAG VALIDATION NEEDS TO BE WITHIN 1-17 ONLY.
 
   getAllDishes(db) {
     return db

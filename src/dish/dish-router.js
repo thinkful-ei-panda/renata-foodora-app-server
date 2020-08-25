@@ -33,7 +33,7 @@ restaurantDishRouter
   .post(jsonBodyParser, (req, res, next) => {
     const newDish = {
       restaurant_id: req.body.restaurant_id,
-      name: req.body.name.trim(),
+      name: req.body.name.trim().replace(/\s+/g, ' '),
       price: req.body.price,
       tag_id: req.body.tag_id,
     };

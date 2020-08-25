@@ -80,7 +80,7 @@ const restValidationService = {
     return db
       .from({ d: 'dish'})
       .where('d.id', id)
-      .where('d.restaurant_id', restaurant_id)
+      .andWhere('d.restaurant_id', restaurant_id)
       .delete();
   },
 
