@@ -26,6 +26,13 @@ const restValidationService = {
     return null;
   },
 
+  nameValidation(name){
+    if(name.length > 25){
+      return 'Name has too many characters.';
+    }
+    return null;
+  },
+
   checkRestLogin(db, username) {
     return db('restaurant')
       .where({ username })

@@ -103,17 +103,31 @@ restRouter
   })
   .patch(jsonBodyParser, (req, res, next) => {
     
-    console.log("req.body", JSON.stringify(req.body))
+    console.log('req.body', JSON.stringify(req.body));
     const trimUpdateRest = {
       id: req.params.id,
       name: req.body.name.trim().replace(/\s+/g, ' '),
       phone: req.body.phone.replace(/\D/g, ''),
     };
+
+    for (const field of ['name', 'phone'])
+      if (!trimUpdateRest[field]) {
+        logs.error(`Restaurant ${field} is required`);
+        return res
+          .status(400)
+          .json({ error: `The ${field} is required.` });
+      }
+
+    console.log('trimUpdateRest', trimUpdateRest);
+
+    const nameError = restValidationService.nameValidation(trimUpdateRest.name);
+    if(nameError){
+      logs.error(nameError);
+      return res
+        .status(400)
+        .json({ error: nameError });
+    }
     
-    console.log("trimUpdateRest", trimUpdateRest)
-
-    //TODO NEED TO GET BETTER VALIDATION ON PATCH
-
     const phoneError = restValidationService.phoneValidation(trimUpdateRest.phone);
     if (phoneError) {
       logs.error(phoneError);
@@ -135,6 +149,9 @@ restRouter
         }
       })
       //.catch(next);
+      .catch(err => {
+        res.status(409).json({ error: err });
+      });
   });
 
 restRouter
