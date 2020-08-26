@@ -5,6 +5,7 @@ const restaurantDishRouter = express.Router();
 const jsonBodyParser = express.json();
 const logs = require('../logs');
 
+//XSS TO PROTECT AGAINST SCRIPT ATTACKS
 const serialDish = (dish) => ({
   id: dish.id,
   name: xss(dish.name),
@@ -16,20 +17,7 @@ const serialDish = (dish) => ({
 
 restaurantDishRouter
   .route('/dish')
-  .get((req, res, next) => {
-    const db = req.app.get('db');
-    restaurantDishService
-      .getAllDishes(db)
-      .then((dish) => {
-        logs.info('Request for all dishes successful.');
-        res
-          .status(200)
-          .json(dish
-            .map(serialDish)
-          );
-      })
-      .catch(next);
-  })
+  //ADD A DISH
   .post(jsonBodyParser, (req, res, next) => {
     const newDish = {
       restaurant_id: req.body.restaurant_id,
@@ -38,6 +26,7 @@ restaurantDishRouter
       tag_id: req.body.tag_id,
     };
 
+    //VALIDATION FOR NAME AND PRICE [REQUIRED FIELDS]
     for (const field of ['name', 'price'])
       if (!newDish[field]) {
         logs.error(`Dish ${field} is required.`);
@@ -46,6 +35,7 @@ restaurantDishRouter
           .json({ error: `The ${field} field is required.` });
       }
 
+    //CONST CALLING PRICE ERROR VALIDATION
     const priceError = restaurantDishService.priceValidation(newDish.price);
     if (priceError) {
       logs.error(priceError);
@@ -54,6 +44,7 @@ restaurantDishRouter
         .json({ error: priceError });
     }
 
+    //CONST CALLING TAG ERROR VALIDATION
     const tagError = restaurantDishService.tagValidation(req.body.tag_id);
     if (tagError) {
       logs.error(tagError);
@@ -62,6 +53,7 @@ restaurantDishRouter
         .json({ error: tagError });
     }
 
+    //ADDING DISH VALIDATION
     restaurantDishService
       .addDish(req.app.get('db'), newDish)
       .then((dish) => {
@@ -84,6 +76,7 @@ restaurantDishRouter
 
 restaurantDishRouter
   .route('/dish/:id')
+  //REQUESTING ALL DISHES FROM ID
   .all((req, res, next) => {
     const { id } = req.params;
     restaurantDishService
@@ -101,9 +94,11 @@ restaurantDishRouter
   .get((req, res) => {
     res.json(res.dish);
   })
+  //DELETE A DISH WITH ID
   .delete(jsonBodyParser, (req, res, next) => {
     const { id } = req.params;
 
+    //DELETE DISH VALIDATION
     restaurantDishService
       .deleteDish(req.app.get('db'), id)
       .then(() => {
@@ -111,47 +106,26 @@ restaurantDishRouter
         res.status(204).end();
       })
       .catch(next);
-  })
-  .patch(jsonBodyParser, (req, res, next) => {
-    const id = req.params.id;
-    const price = req.query.price;
-
-    restaurantDishService
-      .updateDish(req.app.get('db'), id, price)
-      .then(() => {
-        logs.info(`Dish price [id ${id}] was updated successfully.`);
-        res.status(204).end();
-      })
-      .catch(next);
   });
 
 restaurantDishRouter
   .route('/dishSearchResults')
-//TODO REMEMBER TO DELETE TAG FROM THE RESULTS HERE
+  //GET ALL DISHES AND DISPLAY WITH TAGS + REST. INFO
   .get((req, res, next) => {
-
-    // note - expecting req.query.tag to be string like '2,3,5' or '15' or ''
-    // we want to convert the (submitted) string into an array
-    // let tagCriterion = req.query.tag;
-    // if (tagCriterion === undefined || tagCriterion === null || tagCriterion.length === 0) {
-    //   tagCriterion = [];
-    // } else {
-    //   tagCriterion = tagCriterion.split(',');
-    // }
-
     const SearchParams = {
-      tag: req.query.tag, //tagCriterion
+      tag: req.query.tag, 
       price: req.query.price,
       name: req.query.name,
     };
-    //console.log("SearchParams", JSON.stringify(SearchParams));
-        
+    
+    //CONST CALLING PRICE VALIDATION
     const priceSearchError = restaurantDishService.searchPriceValidation(SearchParams.price);
     if(priceSearchError){
       logs.error(priceSearchError);
       return res.status(400).json({ error: priceSearchError });
     }
     
+    //GETTING ALL DISHES VALIDATION
     restaurantDishService
       .showResult(req.app.get('db'), SearchParams.tag, restaurantDishService.convertPriceToRange(SearchParams.price), SearchParams.name)
       .then((dishes) => {
@@ -167,6 +141,7 @@ restaurantDishRouter
   });
 
 restaurantDishRouter.route('/tag')
+  //GETTING ALL TAGS FROM DB [DISPLAY ON SEARCH, ADD DISH]. READ ONLY.
   .all((req, res, next) => {
     const db = req.app.get('db');
     restaurantDishService
@@ -177,30 +152,5 @@ restaurantDishRouter.route('/tag')
       })
       .catch(next);
   });
-
-// restaurantDishRouter.route('/price')
-//   .all((req, res, next) => {
-//     const db = req.app.get('db');
-//     restaurantDishService
-//       .getPrice(db)
-//       .then((price) => {
-//         logs.info('Request all prices successful.');
-//         res.status(201).json(price);
-//       })
-//       .catch(next);
-//   });
-
-// restaurantDishRouter.route('/test')
-//   .all((req, res, next) => {
-//     const db = req.app.get('db');
-//     restaurantDishService
-//       .dishResultsModified(db)
-//       .then((test) => {
-//         logs.info('Request all TESTS successful.');
-//         res.status(201).json(test);
-//       })
-//       .catch(next);
-//   });
-
 
 module.exports = restaurantDishRouter;

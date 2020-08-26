@@ -1,7 +1,9 @@
 const bcrypt = require('bcryptjs');
 
+//PASSWORD VALIDATION
 const validation = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[\S]+/;
 
+//PASSWORD VALIDATION
 const restValidationService = {
   passValidation(password) {
     if (password.length < 6) {
@@ -19,6 +21,7 @@ const restValidationService = {
     return null;
   },
 
+  //PHONE VALIDATION
   phoneValidation(phone) {
     if (phone.length !== 10) {
       return 'Phone must be 10 digits.';
@@ -26,6 +29,7 @@ const restValidationService = {
     return null;
   },
 
+  //NAME LENGTH VALIDATION
   nameValidation(name){
     if(name.length > 25){
       return 'Name has too many characters.';
@@ -33,6 +37,7 @@ const restValidationService = {
     return null;
   },
 
+  //USED TO SHOW THE NAME OF THE RESTAURANT
   checkRestLogin(db, username) {
     return db('restaurant')
       .where({ username })
@@ -40,6 +45,7 @@ const restValidationService = {
       .then((rest) => !!rest);
   },
 
+  //REGISTRATION
   addRest(db, newRest) {
     return db
       .insert(newRest)
@@ -48,12 +54,15 @@ const restValidationService = {
       .then(([rest]) => rest);
   },
 
+  //DELETE RESTAURANT 
+  //TODO DELETE REST?
   deleteRestaurant(db, id) {
     return db('restaurant')
       .where({ id })
       .delete();
   },
 
+  //UPDATE REST. INFO: NAME & PHONE
   updateRestaurant(db, id, name, phone) {
     return db('restaurant')
       .where('id', '=', id)
@@ -61,10 +70,12 @@ const restValidationService = {
       .update({ phone: phone });
   },
 
+  //HASHING THE PASS. USING BCRYPT
   passHash(password) {
     return bcrypt.hash(password, 12);
   },
 
+  //DISPLAYS THE DISHES FROM THE LOGGED PAGE OF THAT RESTAURANT
   showRestaurantDishesByID(db, restaurantID){
     return(
       db.raw(
@@ -83,6 +94,7 @@ const restValidationService = {
     );
   },
 
+  //DELETES A DISH FROM THE RESTAURANT LIST
   deleteRestaurantDishes(db, id, restaurant_id) {
     return db
       .from({ d: 'dish'})

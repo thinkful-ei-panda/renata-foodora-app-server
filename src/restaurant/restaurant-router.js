@@ -1,12 +1,13 @@
 const express = require('express');
 const xss = require('xss');
 const restValidationService = require('./restaurant');
-//const { requireAuth } = require('../middleware/jwt-auth');
+const { requireAuth } = require('../middleware/jwt-auth');
 const path = require('path');
 const restRouter = express.Router();
 const jsonBodyParser = express.json();
 const logs = require('../logs');
 
+//XSS TO PROTECT AGAINST SCRIPT ATTACKS
 const serialRest = (rest) => ({
   id: rest.id,
   username: xss(rest.username),
@@ -17,8 +18,8 @@ const serialRest = (rest) => ({
 
 restRouter
   .route('/register')
-  //.all(requireAuth)
-  //TODO If you want you auth later on!!!
+  .all(requireAuth)
+  //RESTAURANT REGISTER
   .post(jsonBodyParser, (req, res, next) => {
     const trimRest = {
       username: req.body.username.replace(/\s/g, ''),
@@ -27,6 +28,7 @@ restRouter
       phone: req.body.phone.replace(/\D/g, ''),
     };
 
+    //VALIDATION FOR NAME AND PRICE [REQUIRED FIELDS]
     for (const field of ['username', 'password', 'name', 'phone'])
       if (!trimRest[field]) {
         logs.error(`Restaurant ${field} is required`);
@@ -34,7 +36,7 @@ restRouter
           .status(400)
           .json({ error: `The ${field} is required.` });
       }
-
+      //CONST CALLING PASSWORD VALIDATION
     const passError = restValidationService.passValidation(trimRest.password);
     if (passError) {
       logs.error(passError);
@@ -43,6 +45,7 @@ restRouter
         .json({ error: passError });
     }
 
+    //CONST CALLING PHONE VALIDATION
     const phoneError = restValidationService.phoneValidation(trimRest.phone);
     if (phoneError) {
       logs.error(phoneError);
@@ -51,6 +54,7 @@ restRouter
         .json({ error: phoneError });
     }
 
+    //ADDING RESTAURANT VALIDATION
     restValidationService
       .checkRestLogin(req.app.get('db'), trimRest.username)
       .then((validRest) => {
@@ -90,6 +94,8 @@ restRouter
 
 restRouter
   .route('/restaurant/:id')
+  //DELETES A RESTAURANT WITH ID
+  //TODO DELETES A REST?
   .delete(jsonBodyParser, (req, res, next) => {
     const { id } = req.params;
 
@@ -101,15 +107,15 @@ restRouter
       })
       .catch(next);
   })
+  //UPDATES A RESTAURANT FIELDS OF NAME AND PHONE
   .patch(jsonBodyParser, (req, res, next) => {
-    
-    console.log('req.body', JSON.stringify(req.body));
     const trimUpdateRest = {
       id: req.params.id,
       name: req.body.name.trim().replace(/\s+/g, ' '),
       phone: req.body.phone.replace(/\D/g, ''),
     };
 
+    //VALIDATION FOR NAME AND PRICE [REQUIRED FIELDS]
     for (const field of ['name', 'phone'])
       if (!trimUpdateRest[field]) {
         logs.error(`Restaurant ${field} is required`);
@@ -118,8 +124,7 @@ restRouter
           .json({ error: `The ${field} is required.` });
       }
 
-    console.log('trimUpdateRest', trimUpdateRest);
-
+    //CONST CALLING NAME VALIDATION
     const nameError = restValidationService.nameValidation(trimUpdateRest.name);
     if(nameError){
       logs.error(nameError);
@@ -128,6 +133,7 @@ restRouter
         .json({ error: nameError });
     }
     
+    //CONST CALLING PHONE VALIDATION
     const phoneError = restValidationService.phoneValidation(trimUpdateRest.phone);
     if (phoneError) {
       logs.error(phoneError);
@@ -136,6 +142,7 @@ restRouter
         .json({ error: phoneError });
     }
 
+    //UPDATE RESTAURANT VALIDATION
     restValidationService
       .updateRestaurant(req.app.get('db'), trimUpdateRest.id, trimUpdateRest.name, trimUpdateRest.phone)
       .then(() => {
@@ -148,7 +155,6 @@ restRouter
           res.status(204).end();
         }
       })
-      //.catch(next);
       .catch(err => {
         res.status(409).json({ error: err });
       });
@@ -156,6 +162,7 @@ restRouter
 
 restRouter
   .route('/restaurant-dish-list/:id')
+  //GETS DISHES FROM A SPECIFIC REST. ID
   .get((req, res, next) => {
     const { id } = req.params;
 
@@ -169,6 +176,7 @@ restRouter
       })
       .catch(next);
   })
+  //DELETES A DISH FROM A SPECIFIC REST. ID
   .delete(jsonBodyParser, (req, res, next) => {
     const dish_id = req.query.dish_id;
     const restaurant_id = req.params.id;

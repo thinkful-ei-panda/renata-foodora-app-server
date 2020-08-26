@@ -1,26 +1,38 @@
-# Express Boilerplate!
+# Foodora - An app for dietary restrictions. 
 
-This is a boilerplate project used for starting new projects!
+## Links:
+* Heroku: [Here]()
+* BASE_URL: https://[herokuURL]/api/ ?????????
+* FrontEnd: [Github - Foodora]()
+* Live: [Foodora]()
+* Gist: [Gist]()
 
-## Set up
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+## Summary:
+What's the app? What does it fix? As a user...? 
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
 
-## Scripts
+## API Documentation:
 
-Start the application `npm start`
 
-Start nodemon for the application `npm run dev`
+## Screenshots:
+![Landing Page]()
+![Something]()
+![Something]()
 
-Run the tests `npm test`
 
-## Deploying
+## Technologies used:
+* React
+* React Router
+* Node.js
+* Express
+* Server: Heroku???
+* Deployment: Vercel//Netlify????
+* Chai
+* Nodemon
+* Supertest
+* Mocha
+* Enzyme
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+## Contact:
+LinkedIn: 

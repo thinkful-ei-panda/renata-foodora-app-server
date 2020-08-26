@@ -1,6 +1,7 @@
 const winston = require('winston');
 const { NODE_ENV } = require('./config');
 
+//ADDS DESCRIPTION ON ERROR & MESSAGE 
 const logs = winston.createLogger({
   level: 'info',
   format: winston.format.json(),

@@ -1,23 +1,13 @@
-const knex = require('knex');
-
 const restaurantDishService = {
+  //THIS SQL DISPLAYS THE DISHES ON THE SCREEN MERGING 3 TABLES: DISH, RESTAURANT AND DISH-HAS-TAG
   showResult(db, tag, priceRange, name) { 
-    //tag='[17]';
-    console.log('dish.js.restaurantDishService.showResult() tag=', tag + ', isArray?=' + Array.isArray(tag));
-    //console.log('showResult -> priceRange', priceRange);
-
-    //Array.isArray(tag);
-    //console.log("ARRAY IS ARRAY !!!! showResult -> Array.isArray(tag)", Array.isArray(tag));
-
-    // prepare the LIKE parameter
+    // PREPARES 'LIKE' PARAMETER
     const likeName = (name === undefined || name === null) ? '%' : '%' + name + '%';
-    // prepare the TAG parameter (the SQL hates comparing empty array)
+    //PREPARE TAG PARAMETER (SQL DOES NOT LIKE COMPARING EMPTY ARRAY)
     let queryTagFragment = '';
     if (tag !== undefined && tag !== null && tag.length > 0) {
       queryTagFragment = ` having ARRAY[${tag.toString()}]::integer[] <@ ARRAY_REMOVE(ARRAY_AGG(t.id), null)`;
     }
-
-    //console.log("QUERRY FRAGMENT TAG showResult -> queryTagFragment", queryTagFragment)
 
     return (
       db
@@ -46,38 +36,11 @@ const restaurantDishService = {
         //.then((dishes) => dishes)
         .then((dishes) => dishes.rows)
     );
-
-    // return (
-    //   db
-    //     .select(
-    //       'd.id',
-    //       'd.name',
-    //       'd.restaurant_id',
-    //       'd.price',
-    //       'r.name as restaurantname',
-    //       'r.phone',
-    //       //knex.raw('ARRAY_AGG(t.id) as tag_ids'),
-    //       knex.raw('ARRAY_AGG(t.tag) as tag_names')
-    //     )
-    //     .from({ dht: 'dish_has_tag' })
-    //     .leftJoin({ t: 'tag' }, 'dht.tag_id', '=', 't.id')
-    //     .leftJoin({ d: 'dish' }, 'd.id', '=', 'dht.dish_id')
-    //     .leftJoin({ r: 'restaurant' }, 'd.restaurant_id', '=', 'r.id')
-    //     .where('d.price', '>=', priceRange.fromPrice)
-    //     .where('d.price', '<=', priceRange.toPrice)
-    //     .groupBy('d.id', 'd.name', 'r.name', 'r.phone')
-    //     //.groupBy('d.id', 'd.name')
-    //     .orderBy('d.name')
-    //     .then((dishes) => dishes)
-    // );
-
-    //.orderBy(['dish.name', 'restaurant.name', 'tag.tag']);
   },
 
+  //ADDS A DISH TO DB
   addDish(db, newDish) {
-    console.log("addDish -> newDish", newDish);
     return db
-      //.insert(newDish)
       .insert({ 
         restaurant_id: newDish.restaurant_id,
         name: newDish.name,
@@ -88,6 +51,7 @@ const restaurantDishService = {
       .then(([dish]) => dish);
   },
 
+  //ADD TAGS [1-17] TO A SPECIFIC DISH. ADDS AS AN ARRAY 
   addTag(db, dish_id, tag_id){
     const newDishHasTag = {
       dish_id: dish_id,
@@ -101,6 +65,7 @@ const restaurantDishService = {
       .then(([tag]) => tag);
   },
 
+  //VALIDATION FOR THE FRONTEND [SEARCH AND ADD DISH] CHOOSE BETWEEN 1-5 TAGS  
   tagValidation(tag){
     if(tag.length < 1){
       return 'At least one tag needs to be selected.';
@@ -110,14 +75,9 @@ const restaurantDishService = {
     }
     return null;
   },
-  //TODO TAG VALIDATION NEEDS TO BE WITHIN 1-17 ONLY.
+  //TODO IN FUTURE: TAG VALIDATION NEEDS TO BE WITHIN 1-17 ONLY.
 
-  getAllDishes(db) {
-    return db
-      .select('*')
-      .from('dish');
-  },
-
+  //PRICE MAY RANGE 1-100 AND NEEDS TO BE AN INTEGER. 
   priceValidation(price) {
     let parseResult = parseInt(price);
     if (isNaN(parseResult)) {
@@ -132,6 +92,7 @@ const restaurantDishService = {
     return null;
   },
 
+  //GETS THE RESTAURANT INFO + DISHES FROM THAT RESTAURANT
   getById(db, id) {
     return db
       .select(
@@ -147,18 +108,14 @@ const restaurantDishService = {
       .where('d.id', id);
   },
 
+  //DELETES DISH BY ID
   deleteDish(db, id) {
     return db('dish')
       .where({ id })
       .delete();
   },
 
-  updateDish(db, id, price) {
-    return db('dish')
-      .where('id', '=', id)
-      .update({ price: price });
-  },
-
+  //SQL TO DISPLAY ALL TAGS [SEARCH AND ADD DISH]. READ ONLY.
   getAllTags(db){
     return db
       .select('*')
@@ -166,9 +123,9 @@ const restaurantDishService = {
       .orderBy(['tag.tag']);
   },
 
+  //PRICE VALIDATION ON SEARCH SELECTION. CAN BE NULL.
   searchPriceValidation(price){
     let parseResult = parseInt(price);
-    //TODO NEED TO STOP WHEN PRICE= 
     if(price == null || price == ''){
       return null;
     }
@@ -181,6 +138,7 @@ const restaurantDishService = {
     return null;
   },
 
+  //PRICE RANGES FROM 1-5 = 1-100
   convertPriceToRange(price){
     let fromPrice = 1;
     let toPrice = 100;
@@ -210,69 +168,7 @@ const restaurantDishService = {
       toPrice: toPrice
     };
   },
-
-  // dishResultsModified(db, dishID, name, tag){
-
-  //   return (
-  //     db
-  //       .select(
-  //         'd.id',
-  //         'd.name',
-  //         'd.restaurant_id',
-  //         'd.price',
-  //         'r.name as restaurantname',
-  //         'r.phone',
-  //         knex.raw('ARRAY_AGG(t.id) as tag_ids'),
-  //         knex.raw('ARRAY_AGG(t.tag) as tag_names')
-  //       )
-  //       .from({ dht: 'dish_has_tag' })
-  //       .leftJoin({ t: 'tag' }, 'dht.tag_id', '=', 't.id')
-  //       .leftJoin({ d: 'dish' }, 'd.id', '=', 'dht.dish_id')
-  //       .leftJoin({ r: 'restaurant' }, 'd.restaurant_id', '=', 'r.id')
-  //       //.where('d.price', '>=', priceRange.fromPrice)
-  //       //.where('d.price', '<=', priceRange.toPrice)
-  //       .groupBy('d.id', 'd.name', 'r.name', 'r.phone')
-  //       .orderBy('d.name')
-  //       .then((dishes) => dishes)
-  //   );
-  // },
   
 };
 
 module.exports = restaurantDishService;
-
-
-
-// showResult(db, tag, priceRange, name) {
-//   console.log("showResult -> name", name)
-//   console.log("showResult -> price", JSON.stringify(priceRange))
- 
-//     return (
-//       db
-//         .select(
-//           "d.id",
-//           "d.restaurant_id",
-//           "d.name",
-//           "d.price",
-//           "r.name as restaurantname",
-//           "r.phone",
-//           "t.tag"
-//         )
-//         .from({ d: "dish" })
-//         .leftJoin({ r: "restaurant" }, "d.restaurant_id", "=", "r.id")
-//         .leftJoin({ dht: "dish_has_tag" }, "d.id", "=", "dht.dish_id")
-//         .leftJoin({ t: "tag" }, "dht.tag_id", "=", "t.id")
-//         .where('d.price', '>=', priceRange.fromPrice)
-//         .where('d.price', '<=', priceRange.toPrice)
-//         .then((results) => {
-//           return results.reduce((result, unflatDish) => {
-//             result[unflatDish.id] = result[unflatDish.id] || {
-//               ...unflatDish,
-//               tags: [],
-//             };
-
-//             result[unflatDish.id].tags.push(unflatDish.tag);
-//             return result;
-//           }, {});
-//         })
-//     );
