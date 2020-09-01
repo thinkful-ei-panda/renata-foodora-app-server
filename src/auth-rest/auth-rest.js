@@ -8,6 +8,8 @@ const authRestaurantService = {
   },
 
   compareRestPass(password, hash) {
+    console.log("AUTH REST compareRestPass -> hash", hash);
+    console.log("AUTH REST compareRestPass -> password", password);
     return bcrypt.compare(password, hash);
   },
 

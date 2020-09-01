@@ -14,7 +14,7 @@ function requireAuth(req, res, next) {
   try {
     const payload = authRestaurantService.verifyRestJWT(bearerToken);
 
-    authRestaurantService
+    return authRestaurantService
       .getRestUsername(req.app.get('db'), payload.subject)
       .then((rest) => {
         if (!rest) {

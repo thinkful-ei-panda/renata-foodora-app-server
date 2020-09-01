@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "seed": "psql -U dunder_mifflin -d foodora -f ./sql-scripts/seed.foodora.sql",
+    "seed-test": "psql -U dunder_mifflin -d foodora-test -f ./sql-scripts/seed.foodora.sql",
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
     "migrate": "postgrator --config postgrator-config.js",

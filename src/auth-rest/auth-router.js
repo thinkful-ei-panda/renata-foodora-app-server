@@ -11,6 +11,7 @@ authRouter
       username: req.body.username, 
       password: req.body.password, 
     };
+    console.log(" ROUTER restLogin", JSON.stringify(restLogin))
 
     for (const field of ['username', 'password'])
       if(!restLogin[field]){
@@ -20,8 +21,7 @@ authRouter
           .json({ error: `The '${field}' field is required.` });
       }
   
-
-    authRestaurantService
+    return authRestaurantService
       .getRestUsername(req.app.get('db'), restLogin.username)
       .then((dbRest) => {
         if (!dbRest) {
@@ -39,12 +39,13 @@ authRouter
 
             const subject = dbRest.username;
             const payload = { restaurant_id: dbRest.id };
-            res.send({
+            return res.send({
               authToken: authRestaurantService.createRestJWT(subject, payload),
               restaurant_id: payload.restaurant_id,
               name: dbRest.name,
             });
-          });
+          })
+          .catch(next);
       })
       .catch(next);
   });

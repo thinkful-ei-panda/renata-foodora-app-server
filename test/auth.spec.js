@@ -7,8 +7,9 @@ const supertest = require('supertest');
 describe('Auth Endpoints', () => {
   let db;
 
-  const { restaurant } = base.concatenate();
-  const restTest = restaurant[0];
+  const restaurant = base.concatenate();
+  const restTest = restaurant.name1[0];
+  console.log("restTest", JSON.stringify(restTest));
 
   before('make Knex instance', () => {
     db = knex({
@@ -21,7 +22,7 @@ describe('Auth Endpoints', () => {
   before('clean up tables', () => base.clearTables(db));
   afterEach('clean up tables', () => base.clearTables(db));
 
-  describe('POST /auth/login', () => {
+  describe('POST /login', () => {
     beforeEach('insert restaurant', () => base.seedRestTable(db, restTest));
 
     const reqFields = ['username', 'password'];
@@ -35,53 +36,31 @@ describe('Auth Endpoints', () => {
         delete loginAttemptBody[field];
 
         return supertest(app)
-          .post('/auth/login')
+          .post('/login')
           .send(loginAttemptBody)
-          .expect(400, { error: `'${field}' is required` });
+          .expect(400, { error: `The '${field}' field is required.` });
       });
     });
-    it('Responds 400 \'Invalid Restaurant username\' when bad username', () => {
+    it('Responds 400 \'Username Invalid\' when bad username', () => {
       const invalidRestName = {
         username: 'user_not',
         password: 'existy',
       };
       return supertest(app)
-        .post('/auth/login')
+        .post('/login')
         .send(invalidRestName)
-        .expect(400, { error: 'Invalid Restaurant username' });
+        .expect(400, { error: 'Username Invalid.' });
     });
-    it('Responds 400 \'Invalid Restaurant password\' when bad password', () => {
+    it('Responds 400 \'Password Invalid\' when bad password', () => {
       const invalidPass = {
         username: restTest.username,
         password: 'existy',
       };
       return supertest(app)
-        .post('/auth/login')
+        .post('/login')
         .send(invalidPass)
-        .expect(400, { error: 'Invalid Restaurant password' });
+        .expect(400, { error: 'Password Invalid.' });
     });
-    it('Responds 200, JWT auth token and user ID using secret when valid', () => {
-      const validRest = {
-        username: restTest.username,
-        password: restTest.password,
-      };
-      const expectToken = jwt.sign(
-        { restaurant_id: restTest.id },
-        process.env.JWT_SECRET,
-        {
-          subject: restTest.username,
-          algorithm: 'HS256',
-        }
-      );
-      const expectID = restTest.id;
 
-      return supertest(app)
-        .post('./auth/login')
-        .send(validRest)
-        .expect(200, {
-          token: expectToken,
-          restaurant_id: expectID,
-        });
-    });
   });
 });
