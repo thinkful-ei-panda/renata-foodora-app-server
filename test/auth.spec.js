@@ -9,7 +9,6 @@ describe('Auth Endpoints', () => {
 
   const restaurant = base.concatenate();
   const restTest = restaurant.name1[0];
-  console.log("restTest", JSON.stringify(restTest));
 
   before('make Knex instance', () => {
     db = knex({

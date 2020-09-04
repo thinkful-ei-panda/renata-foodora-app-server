@@ -18,7 +18,7 @@ const serialRest = (rest) => ({
 
 restRouter
   .route('/register')
-  .all(requireAuth)
+  // .all(requireAuth)
   //RESTAURANT REGISTER
   .post(jsonBodyParser, (req, res, next) => {
     const trimRest = {

@@ -11,7 +11,6 @@ authRouter
       username: req.body.username, 
       password: req.body.password, 
     };
-    console.log(" ROUTER restLogin", JSON.stringify(restLogin))
 
     for (const field of ['username', 'password'])
       if(!restLogin[field]){
