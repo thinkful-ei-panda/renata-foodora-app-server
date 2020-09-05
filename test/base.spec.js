@@ -96,7 +96,6 @@ function clearTables(db){
 }
 
 function seedRestTable(db, restaurant){
-  //TODO SEEED THE TABLE WITHOUT MODIFYING THE REST. ARGS.  
   restaurant.password = bcrypt.hashSync(restaurant.password, 1);
   return db
     .into('restaurant')

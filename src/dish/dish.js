@@ -75,7 +75,6 @@ const restaurantDishService = {
     }
     return null;
   },
-  //TODO IN FUTURE: TAG VALIDATION NEEDS TO BE WITHIN 1-17 ONLY.
 
   //PRICE MAY RANGE 1-100 AND NEEDS TO BE AN INTEGER. 
   priceValidation(price) {

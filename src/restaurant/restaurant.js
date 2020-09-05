@@ -55,7 +55,6 @@ const restValidationService = {
   },
 
   //DELETE RESTAURANT 
-  //TODO DELETE REST?
   deleteRestaurant(db, id) {
     return db('restaurant')
       .where({ id })

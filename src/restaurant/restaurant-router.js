@@ -95,7 +95,6 @@ restRouter
 restRouter
   .route('/restaurant/:id')
   //DELETES A RESTAURANT WITH ID
-  //TODO DELETES A REST?
   .delete(jsonBodyParser, (req, res, next) => {
     const { id } = req.params;
 
