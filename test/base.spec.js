@@ -66,7 +66,7 @@ function seedRestTable(db, restaurant){
     .into('restaurant')
     .insert(restaurant)
     .then(() =>
-      db.raw(`SELECT setval('restaurant_id_seq', ?)`, restaurant.id)
+      db.raw('SELECT setval(\'restaurant_id_seq\', ?)', restaurant.id)
     );
 }
 
