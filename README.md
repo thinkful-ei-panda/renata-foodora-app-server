@@ -42,9 +42,12 @@ DevTools: _Chai | Nodemon | SuperTest | Mocha | Enzyme_
 
 ## Screenshots:
 
-![Landing Page]()
-![Something]()
-![Something]()
+![Landing Page](/src/Images/main.jpg "Main page")
+![Login](/src/Images/login.jpg "Login Page")
+![Register](/src/Images/register.jpg "Register Page")
+![Search Results](/src/Images/search-results.jpg "Search Results")
+![Restaurant Dishes](/src/Images/rest-dishes.jpg "Restaurant Landing page displaying the dishes list")
+![Add a Dish](/src/Images/rest-add-dish.jpg "Restaurant Add a Dish")
 
 ## Contact:
 LinkedIn: [Contact](https://www.linkedin.com/in/renatafd/?locale=en_US)
