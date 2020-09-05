@@ -41,41 +41,6 @@ function restaurantTest() {
   ];
 }
 
-// function dishTest(rest) {
-//   return [
-//     {
-//       id: 1,
-//       name: 'Dish Test 1',
-//       price: '12',
-//       restaurant_id: rest[3],
-//     },
-//     {
-//       id: 2,
-//       name: 'Dish Test 2',
-//       price: '34',
-//       restaurant_id: rest[2],
-//     },
-//     {
-//       id: 3,
-//       name: 'Dish Test 3',
-//       price: '78',
-//       restaurant_id: rest[1],
-//     },
-//     {
-//       id: 4,
-//       name: 'Dish Test 4',
-//       price: '55',
-//       restaurant_id: rest[4],
-//     },
-//     {
-//       id: 4,
-//       name: 'Dish Test 4',
-//       price: '90',
-//       restaurant_id: rest[5],
-//     },
-//   ];
-// }
-
 function concatenate(){
   const restaurantArray = restaurantTest();
   //const dish = dishTest(restaurantArray);
@@ -104,25 +69,6 @@ function seedRestTable(db, restaurant){
       db.raw(`SELECT setval('restaurant_id_seq', ?)`, restaurant.id)
     );
 }
-// function seedOtherTables(db, dish, tag, dish_has_tag, restaurant){
-    
-//   return db
-//       .transaction(async (event) => {
-//       // await seedRestTable(event, restaurant);
-//       // await event.into('tag').insert(tag);
-//       // await event.raw(`SELECT setval('tag_id_seq', ?)`, [
-//       //     tag[tag.length -1].id,
-//       // ]);
-//       await event.into('dish').insert(dish);
-//       await event.raw(`SELECT setval('dish_id_seq', ?)`, [
-//           dish[dish.length -1].id,
-//       ]);
-//       // await event.into('dish_has_tag'),insert(dish_has_tag);
-//       // await event.raw(`SELECT setval('dish_has_tag' , ?)`,[
-//       //     dish_has_tag[dish_has_tag.length -1].id,
-//       // ]);
-//   });
-// }
 
 function seedMaliciousDish(db, restaurant, dish){
   return seedRestTable(db, restaurant)
@@ -145,11 +91,9 @@ function makeAuthHead(restaurant, secret = process.env.JWT_SECRET){
 
 module.exports = {
   restaurantTest,
-  //dishTest,
   concatenate,
   clearTables,
   seedRestTable,
-  //seedOtherTables,
   seedMaliciousDish,
   makeAuthHead,
 };
