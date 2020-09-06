@@ -80,8 +80,7 @@ restRouter
                   .status(200)
                   .location(
                     path.posix.join(
-                      'http://localhost:8080',
-                      //TODO 'USE THE HEROKU LINK HERE'
+                      'https://dry-fjord-49769.herokuapp.com/',
                       `/restaurant/${rest.id}`
                     )
                   )

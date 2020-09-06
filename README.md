@@ -9,8 +9,8 @@ As a user, you don't need to have an account in order to use _Foodora_. Only res
 ## Links:
 
 * Live: [Foodora]()
-* Heroku: [API]()
-* Server: [Github - Foodora](https://github.com/thinkful-ei-panda/renata-foodora-app-server)
+* Heroku: [API](https://dry-fjord-49769.herokuapp.com/)
+* Client: [Github - Foodora](https://github.com/thinkful-ei-panda/renata-foodora-app-client)
 * Gist: [Gist](https://gist.github.com/Seraphyne/6cddaba85a34a6df5a964c7efb6cf3d2)
 
 
