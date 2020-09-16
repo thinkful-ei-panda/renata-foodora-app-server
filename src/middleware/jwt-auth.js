@@ -18,7 +18,7 @@ function requireAuth(req, res, next) {
       .getRestUsername(req.app.get('db'), payload.subject)
       .then((rest) => {
         if (!rest) {
-          return res.status(401).json({ error: 'Unauthorized request' });
+          return res.status(401).json({ error: 'Unauthorized request.' });
         }
         req.rest = rest;
         next();
@@ -29,7 +29,7 @@ function requireAuth(req, res, next) {
         next(error);
       });
   } catch (error) {
-    res.status(401).json({ error: 'Unauthorized request' });
+    res.status(401).json({ error: 'Unauthorized request.' });
   }
 }
 

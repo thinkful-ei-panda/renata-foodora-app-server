@@ -21,10 +21,13 @@ restaurantDishRouter
   .post(jsonBodyParser, (req, res, next) => {
     const newDish = {
       restaurant_id: req.body.restaurant_id,
-      name: req.body.name.trim().replace(/\s+/g, ' '),
+      name: req.body.name,
       price: req.body.price,
       tag_id: req.body.tag_id,
     };
+
+    //VALIDATION WHEN USER USES FIELDS WITH SPACES BEFORE AND AFTER
+    //newDish.name = newDish.name.trim().replace(/\s+/g, ' ');
 
     //VALIDATION FOR NAME AND PRICE [REQUIRED FIELDS]
     for (const field of ['name', 'price'])
@@ -140,7 +143,8 @@ restaurantDishRouter
       .catch(next);
   });
 
-restaurantDishRouter.route('/tag')
+restaurantDishRouter
+  .route('/tag')
   //GETTING ALL TAGS FROM DB [DISPLAY ON SEARCH, ADD DISH]. READ ONLY.
   .all((req, res, next) => {
     const db = req.app.get('db');

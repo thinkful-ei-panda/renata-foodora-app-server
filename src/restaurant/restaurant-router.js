@@ -1,7 +1,6 @@
 const express = require('express');
 const xss = require('xss');
 const restValidationService = require('./restaurant');
-const { requireAuth } = require('../middleware/jwt-auth');
 const path = require('path');
 const restRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -22,12 +21,18 @@ restRouter
   //RESTAURANT REGISTER
   .post(jsonBodyParser, (req, res, next) => {
     const trimRest = {
-      username: req.body.username.replace(/\s/g, ''),
+      username: req.body.username,
       password: req.body.password,
-      name: req.body.name.trim().replace(/\s+/g, ''),
-      phone: req.body.phone.replace(/\D/g, ''),
+      name: req.body.name,
+      phone: req.body.phone,
     };
 
+    //VALIDATION WHEN USER USES FIELDS WITH SPACES BEFORE AND AFTER
+    // trimRest.name = trimRest.name.trim().replace(/\s+/g, ' ');
+    // trimRest.phone = trimRest.phone.replace(/\D/g, '');
+    // trimRest.username = trimRest.username.replace(/\s/g, '');
+        
+    
     //VALIDATION FOR NAME AND PRICE [REQUIRED FIELDS]
     for (const field of ['username', 'password', 'name', 'phone'])
       if (!trimRest[field]) {
@@ -36,13 +41,23 @@ restRouter
           .status(400)
           .json({ error: `The ${field} is required.` });
       }
-      //CONST CALLING PASSWORD VALIDATION
+
+    //CONST CALLING PASSWORD VALIDATION
     const passError = restValidationService.passValidation(trimRest.password);
     if (passError) {
       logs.error(passError);
       return res
         .status(400)
         .json({ error: passError });
+    }
+    
+    //CONST CALLING NAME VALIDATION
+    const nameError = restValidationService.nameValidation(trimRest.name);
+    if (nameError) {
+      logs.error(nameError);
+      return res
+        .status(400)
+        .json({ error: nameError });
     }
 
     //CONST CALLING PHONE VALIDATION
@@ -64,7 +79,6 @@ restRouter
             .status(400)
             .json({ error: 'Username already exists. Try again.' });
         }
-
         return restValidationService
           .passHash(trimRest.password)
           .then((hashedPass) => {
@@ -77,7 +91,7 @@ restRouter
                   `Restaurant created successfully. The restaurant id is: ${rest.id}.`
                 );
                 res
-                  .status(200)
+                  .status(201)
                   .location(
                     path.posix.join(
                       'https://dry-fjord-49769.herokuapp.com/',
