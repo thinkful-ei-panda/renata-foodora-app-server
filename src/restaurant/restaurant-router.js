@@ -17,7 +17,6 @@ const serialRest = (rest) => ({
 
 restRouter
   .route('/register')
-  // .all(requireAuth)
   //RESTAURANT REGISTER
   .post(jsonBodyParser, (req, res, next) => {
     const trimRest = {
@@ -123,9 +122,13 @@ restRouter
   .patch(jsonBodyParser, (req, res, next) => {
     const trimUpdateRest = {
       id: req.params.id,
-      name: req.body.name.trim().replace(/\s+/g, ' '),
-      phone: req.body.phone.replace(/\D/g, ''),
+      name: req.body.name,
+      phone: req.body.phone,
     };
+
+    //VALIDATION WHEN USER USES FIELDS WITH SPACES BEFORE AND AFTER
+    //trimUpdateRest.name = trimUpdateRest.name.trim().replace(/\s+/g, ' ');
+    //trimUpdateRest.phone = trimUpdateRest.phone.replace(/\D/g, '');
 
     //VALIDATION FOR NAME AND PRICE [REQUIRED FIELDS]
     for (const field of ['name', 'phone'])

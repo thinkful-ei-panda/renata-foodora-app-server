@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 const restaurantDishService = {
   //THIS SQL DISPLAYS THE DISHES ON THE SCREEN MERGING 3 TABLES: DISH, RESTAURANT AND DISH-HAS-TAG
   showResult(db, tag, priceRange, name) { 
@@ -67,6 +68,9 @@ const restaurantDishService = {
 
   //VALIDATION FOR THE FRONTEND [SEARCH AND ADD DISH] CHOOSE BETWEEN 1-5 TAGS  
   tagValidation(tag){
+    if(tag === undefined || tag === null){
+      return 'The tag_id field is required.';
+    }
     if(tag.length < 1){
       return 'At least one tag needs to be selected.';
     }

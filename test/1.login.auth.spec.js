@@ -2,7 +2,7 @@ const app = require('../src/app');
 const base = require('./base');
 const jwt = require('jsonwebtoken');
 
-describe('Test against Restaurant /login', () => {
+describe('{POST} Test against Restaurant /login', () => {
   let db;
 
   const restTest = base.restaurantObj();
@@ -21,7 +21,7 @@ describe('Test against Restaurant /login', () => {
   /**
    * @description LOGIN/AUTH
    **/
-  describe('POST /login', () => {
+  describe('{POST} /login', () => {
     beforeEach('insert restaurant', () => base.seedRestTables(db, restTest));
   
     //TESTING FOR REQUIRED FIELDS
@@ -69,7 +69,7 @@ describe('Test against Restaurant /login', () => {
   });
 });
 
-describe('Happy Path /login', () => {
+describe('{POST} Happy Path /login', () => {
   let db;
   
   const restTest = base.restaurantObj();
@@ -98,7 +98,7 @@ describe('Happy Path /login', () => {
       };
 
       const expectedToken = jwt.sign(
-        { restaurant_id: restTest.id },
+        { restaurant_id: 1 },
         process.env.JWT_SECRET,
         {
           subject: restTest.username,
@@ -107,7 +107,7 @@ describe('Happy Path /login', () => {
         }
       );
     
-      const expectedID = restTest.id;
+      const expectedID = 1;
 
       return supertest(app)
         .post('/login')

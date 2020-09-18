@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const app = require('../src/app');
 const base = require('./base');
 
-describe('Register Restaurant /register', function () {
+describe('{POST} /register', function () {
   let db;
 
   const restTest = base.restaurantObj();
@@ -14,14 +14,14 @@ describe('Register Restaurant /register', function () {
 
   after('disconnect from db', () => db.destroy());
 
-  before('cleanup', () => base.clearTables(db));
+  beforeEach('clean up tables', () => base.clearTables(db));
 
   afterEach('cleanup', () => base.clearTables(db));
 
   /**
    * @description Register a restaurant and populate their fields
    **/
-  describe('POST /register', () => {
+  describe('{POST} /register', () => {
     beforeEach('insert restaurants', () => base.seedRestTables(db, restTest));
 
     //TESTS FOR REQUIRED FIELDS
@@ -118,20 +118,6 @@ describe('Register Restaurant /register', function () {
         .expect(400, { error: 'Password must have at least an uppercase, a lowercase and a number.' });
     });
 
-    //TESTS IF USER ALREADY IN DATABASE
-    it('responds 400 \'User username already taken\' when username isn\'t unique', () => {
-      const duplicateUser = {
-        username: restTest.username,
-        password: '11AAaa!!',
-        name: 'name',
-        phone: '2222222222',
-      };
-      return supertest(app)
-        .post('/register')
-        .send(duplicateUser)
-        .expect(400, { error: 'Username already exists. Try again.' });
-    });
-
     //TESTS IF NAME IS TOO LONG
     it('responds 400 \'Name is too long\' when name field is too long', () => {
       const longUser = {
@@ -161,7 +147,7 @@ describe('Register Restaurant /register', function () {
     });
 
     //HAPPY PATH IF PASSED CORRECT CREDENTIALS
-    describe('POST for HAPPY PATH - Given a valid user registration /register', () => {
+    describe('{POST} for {HAPPY PATH} - Given a valid user registration /register', () => {
       it('responds 201, serialized user with no password', () => {
         const newRest = {
           username: 'restusername',
@@ -185,10 +171,10 @@ describe('Register Restaurant /register', function () {
 
       it('stores the new user in db with bcrypt password', () => {
         const newUser = {
-          email: 'test email',
+          username: 'restusername',
           password: '11AAaa!!',
-          name: 'test name',
-          phone: '222-222-2222',
+          name: 'testname',
+          phone: '2222222222',
         };
         return supertest(app)
           .post('/register')
@@ -200,8 +186,8 @@ describe('Register Restaurant /register', function () {
               .where({ id: res.body.id })
               .first()
               .then(row => {
-                expect(row.username).to.eql(newUser.username);
-                expect(row.name).to.eql(newUser.name);
+                expect(row.username).to.eql('restusername');
+                expect(row.name).to.eql('testname');
 
                 return bcrypt.compare(newUser.password, row.password);
               })
@@ -213,3 +199,166 @@ describe('Register Restaurant /register', function () {
     });
   });
 });
+
+describe('{PATCH} /restaurant/:id', function () {
+
+  let db;
+
+  const restTest = base.restaurantObj();
+
+  before('make knex instance', () => {
+    db = base.makeKnexInstance();
+    app.set('db', db);
+  });
+
+  after('disconnect from db', () => db.destroy());
+
+  beforeEach('cleanup', () => {
+    base.clearTables(db);
+  });
+
+
+  afterEach('cleanup', () => base.clearTables(db));
+
+  describe('PATCH /restaurant/:id', () => {
+    beforeEach('insert restaurants', () => base.seedRestTables(db, restTest));
+
+    //TESTS FOR REQUIRED FIELDS
+    const requiredFields = ['name', 'phone'];
+
+    requiredFields.forEach(field => {
+      const deleteAttemptBody = {
+        id: 2,
+        name: 'Restaurant Name',
+        phone: '222-222-2222',
+      };
+
+      it(`responds with 400 required error when '${field}' is missing`, () => {
+        
+        delete deleteAttemptBody[field];
+
+        return supertest(app)
+          .patch('/restaurant/2')
+          .send(deleteAttemptBody)
+          .expect(400, {
+            error: `The ${field} is required.`,
+          });
+      });
+    });
+
+    //TESTS IF NAME IS TOO LONG
+    it('responds 400 \'Name is too long\' when name field is too long', () => {
+      const longRest = {
+        phone: '222-222-2222',
+        name: 'Name '.repeat(44),
+      };
+      return supertest(app)
+        .patch('/restaurant/2')
+        .send(longRest)
+        .expect(400, { error: 'Name has too many characters.' });
+    });
+
+    //TESTS IF PHONE IS TOO LONG
+    it('responds 400 \'Phone is too long\' when phone field isn\'t 10 digits', () => {
+      const phoneVal = {
+        username: 'test115',
+        password: '11AAaa!!',
+        name: 'Name',
+        phone: '22222222222222222222222222222222222',
+      };
+      return supertest(app)
+        .patch('/restaurant/2')
+        .send(phoneVal)
+        .expect(400, { error: 'Phone must be 10 digits.' });
+    });
+
+  });
+});
+
+describe('{PATCH} for {HAPPY PATH} /restaurant/:id', function () {
+  let db;
+
+  const restTest = base.restaurantObj();
+
+  before('make knex instance', () => {
+    db = base.makeKnexInstance();
+    app.set('db', db);
+  });
+
+  after('disconnect from db', () => db.destroy());
+
+  beforeEach('cleanup', () => {
+    base.clearTables(db);
+  });
+
+
+  afterEach('cleanup', () => base.clearTables(db));
+
+  describe('PATCH /restaurant/:id', () => {
+    beforeEach('insert restaurants', () => base.seedRestTables(db, restTest));
+
+    //TESTS WHEN FIELDS WERE ABLE TO UPDATE CORRECTLY
+    it('responds 204 \'Restaurant ID was updated\' when passed valid credentials', () => {
+      const updateRest = {
+        id: 2,
+        name: 'Restaurant Name',
+        phone: '2222222222',
+      };
+      return supertest(app)
+        .patch('/restaurant/2')
+        .send(updateRest)
+        .expect(204);
+    });
+  });
+
+});
+
+describe('{GET} & {DELETE} /restaurant-dish-list/:id', function () {
+
+  let db;
+
+  const restTest = base.restaurantObj();
+
+  before('make knex instance', () => {
+    db = base.makeKnexInstance();
+    app.set('db', db);
+  });
+
+  after('disconnect from db', () => db.destroy());
+
+  beforeEach('cleanup', () => {
+    base.clearTables(db);
+  });
+
+
+  afterEach('cleanup', () => base.clearTables(db));
+
+  describe('{GET} /restaurant-dish-list/:id', () => {
+    beforeEach('insert restaurants', () => base.seedRestTables(db, restTest));
+
+    //TESTS WHEN ABLE TO GET ALL DISHES FROM RESTAURANT ID
+    it('responds 200 \'Dishes from Restaurant ID\' when passed valid credentials', () => {
+      return supertest(app)
+        .get('/restaurant-dish-list/2')
+        .expect(200);
+    });
+
+  });
+
+  describe('{DELETE} /restaurant-dish-list/:id', () => {
+    beforeEach('insert restaurants', () => base.seedRestTables(db, restTest));
+
+    //TESTS WHEN FIELDS WERE ABLE TO DELETE CORRECTLY
+    it('responds 204 \'Restaurant dish was deleted\' when passed valid credentials', () => {
+      const deleteRestDish = {
+        dish_id: 2,
+        restaurant_id: 2
+      };
+      return supertest(app)
+        .delete('/restaurant/2')
+        .send(deleteRestDish)
+        .expect(204);
+    });
+  });
+});
+  

@@ -20,19 +20,17 @@ function makeKnexInstance() {
 function restaurantObj() {
   return (
     {
-      id: 1,
       username: 'rest-test1',
       password: 'restPass1',
       name: 'Restaurant One',
       phone: '222-222-2222',
     }, 
     {
-      id: 2,
       username: 'rest-test2',
       password: 'restPass2',
       name: 'Restaurant Two',
       phone: '222-123-3255',
-    } 
+    }
   );
 }
 
@@ -47,14 +45,12 @@ function makeDishObj() {
       name: 'The First Dish',
       price: 25,
       restaurant_id: 1,
-      tag_id: [1],
     },
     {
       id: 2,
       name: 'The Second Dish',
       price: 56,
-      restaurant_id: 2,
-      tag_id: [2],
+      restaurant_id: 1,
     }
   );
 }
@@ -95,19 +91,6 @@ function makeDishHasTagObj() {
   );
 }
 
-/**
- * remove data from tables and reset sequences for SERIAL id fields
- * @param {knex instance} db
- * @returns {String} - tables populated accordantly
- */
-function makeFixtures() {
-  const testRest = restaurantObj();
-  const testDish = makeDishObj();
-  const testTag = makeTagObj();
-  const testDishWTag = makeDishHasTagObj();
-
-  return { testRest, testDish, testTag, testDishWTag };
-}
 
 /**
  * make a bearer token with jwt for authorization header
@@ -124,7 +107,6 @@ function makeAuthHeader(rest, secret = process.env.JWT_SECRET) {
   return `Bearer ${token}`;
 }
 
-
 /**
  * remove data from tables and reset sequences for SERIAL id fields
  * @param {knex instance} db
@@ -135,22 +117,22 @@ function clearTables(db) {
     trx
       .raw(
         `TRUNCATE
-	dish_has_tag,
-	tag,
-	dish,
-	restaurant
-	RESTART IDENTITY CASCADE;`
+          dish_has_tag,
+          tag,
+          dish,
+          restaurant
+          RESTART IDENTITY CASCADE;`
       )
       .then(() =>
         Promise.all([
           trx.raw('ALTER SEQUENCE dish_has_tag_id_seq minvalue 0 START WITH 1'),
-          trx.raw('ALTER SEQUENCE tag_id_seq minvalue 0 START WITH 1'),
           trx.raw('ALTER SEQUENCE dish_id_seq minvalue 0 START WITH 1'),
           trx.raw('ALTER SEQUENCE restaurant_id_seq minvalue 0 START WITH 1'),
+          trx.raw('ALTER SEQUENCE tag_id_seq minvalue 0 START WITH 1'),
           trx.raw('SELECT setval(\'dish_has_tag_id_seq\', 0)'),
-          trx.raw('SELECT setval(\'tag_id_seq\', 0)'),
           trx.raw('SELECT setval(\'dish_id_seq\', 0)'),
           trx.raw('SELECT setval(\'restaurant_id_seq\', 0)'),
+          trx.raw('SELECT setval(\'tag_id_seq\', 0)'),
         ])
       )
   );
@@ -159,16 +141,85 @@ function clearTables(db) {
 /**
  * insert rest into db with bcrypt passwords and update sequence
  * @param {knex instance} db
- * @param {array} restaurant - array of rest objects for insertion
+ * @param {object} restaurant - array of rest objects for insertion
  * @returns {Promise} - when rest table seeded
  */
 
-function seedRestTables(db, restaurant) {
+async function seedRestTables(db, restaurant) {
   restaurant.password = bcrypt.hashSync(restaurant.password, 1);
-  return db
+  return await db
     .into('restaurant')
-    .insert(restaurant)
-    .then(() => db.raw('SELECT setval(\'restaurant_id_seq\', ?)', restaurant.id));
+    .insert({
+      name: restaurant.name,
+      password: restaurant.password,
+      phone: restaurant.phone,
+      username: restaurant.username,
+     })
+    //.then(() => db.raw('SELECT setval(\'restaurant_id_seq\', ?)', restaurant.id))
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+/**
+ * insert tag into db
+ * @param {knex instance} db
+ * @param {object} tag - array of tag objects for insertion
+ * @returns {Promise} - when tag table seeded
+ */
+
+async function seedTag(db, tag){
+  return await db
+    .into('tag')
+    .insert({ 
+      id: tag.id,
+      tag: tag.tag,
+     })
+    .then(() => db.raw('SELECT setval(\'tag_id_seq\', ?)', tag.id))
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+/**
+ * insert dish_has_tag into db
+ * @param {knex instance} db
+ * @param {object} dish_has_tag - array of dish_has_tag objects for insertion
+ * @returns {Promise} - when dish_has_tag table seeded
+ */
+async function seedDishHasTag(db, dishHasTag){
+  return await db
+    .into('dish_has_tag')
+    .insert({ 
+      id: dishHasTag.id,
+      dish_id: dishHasTag.dish_id,
+      tag_id: dishHasTag.tag_id,
+     })
+    .then(() => db.raw('SELECT setval(\'dish_has_tag_id_seq\', ?)', dishHasTag.id))
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+/**
+ * insert dish into db 
+ * @param {knex instance} db
+ * @param {object} dish - array of dish objects for insertion
+ * @returns {Promise} - when dish table seeded
+ */
+async function seedDish(db, dish){
+  return await db
+    .into('dish')
+    .insert({ 
+      id: dish.id,
+      name: dish.name,
+      price: dish.price,
+      restaurant_id: dish.restaurant_id,
+    })
+   .then(() => db.raw('SELECT setval(\'dish_id_seq\', ?)', dish.id))
+   .catch((error) => {
+     console.error(error);
+   });
 }
 
 
@@ -180,6 +231,8 @@ module.exports = {
   clearTables,
   seedRestTables,
   makeTagObj,
-  makeFixtures,
   makeDishHasTagObj,
+  seedTag,
+  seedDishHasTag,
+  seedDish,
 };
